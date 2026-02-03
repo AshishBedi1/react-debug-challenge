@@ -5,33 +5,36 @@ function Navigation() {
   const location = useLocation()
 
   return (
-    <nav className="navigation">
-      <div className="nav-container">
-        <Link to="/" className="nav-logo">
-          <h2>Task & Shop</h2>
+    <aside className="sidebar">
+      <div className="sidebar-content">
+        <Link to="/" className="sidebar-logo">
+          <h2>Savyre Task</h2>
         </Link>
-        <div className="nav-links">
+        <nav className="sidebar-nav">
           <Link
             to="/"
-            className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+            className={`sidebar-link ${location.pathname === '/' ? 'active' : ''}`}
           >
-            Home
+            <span className="sidebar-icon">🏠</span>
+            <span>Home</span>
           </Link>
           <Link
             to="/todos"
-            className={`nav-link ${location.pathname === '/todos' ? 'active' : ''}`}
+            className={`sidebar-link ${location.pathname === '/todos' ? 'active' : ''}`}
           >
-            📝 Tasks
+            <span className="sidebar-icon">📝</span>
+            <span>Tasks</span>
           </Link>
           <Link
             to="/cart"
-            className={`nav-link ${location.pathname === '/cart' ? 'active' : ''}`}
+            className={`sidebar-link ${location.pathname === '/cart' ? 'active' : ''}`}
           >
-            🛒 Cart
+            <span className="sidebar-icon">🛒</span>
+            <span>Cart</span>
           </Link>
-        </div>
+        </nav>
       </div>
-    </nav>
+    </aside>
   )
 }
 

@@ -3,7 +3,7 @@
   padding: 3rem 1rem;
   max-width: 1400px;
   margin: 0 auto;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #600EE4 0%, #4d0bb8 100%);
 }
 
 .homepage-hero {
@@ -49,11 +49,11 @@
 }
 
 .todo-card {
-  border-top: 4px solid #667eea;
+  border-top: 4px solid #600EE4;
 }
 
 .cart-card {
-  border-top: 4px solid #764ba2;
+  border-top: 4px solid #4d0bb8;
 }
 
 .card-icon {
@@ -97,13 +97,13 @@
 .stat-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #667eea;
+  color: #600EE4;
 }
 
 .card-button {
   margin-top: auto;
   padding: 1rem 2rem;
-  background: #667eea;
+  background: #600EE4;
   color: white;
   border: none;
   border-radius: 8px;
@@ -115,9 +115,9 @@
 }
 
 .card-button:hover {
-  background: #5568d3;
+  background: #4d0bb8;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(96, 14, 228, 0.4);
 }
 
 .homepage-features {

@@ -1,7 +1,7 @@
 .todo-manager {
   min-height: calc(100vh - 80px);
   padding: 2rem 1rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #600EE4 0%, #4d0bb8 100%);
 }
 
 .todo-container {
@@ -17,7 +17,7 @@
   margin: 0 0 1.5rem 0;
   color: #333;
   font-size: 2rem;
-  border-bottom: 3px solid #667eea;
+  border-bottom: 3px solid #600EE4;
   padding-bottom: 0.5rem;
 }
 
@@ -38,7 +38,7 @@
 
 .todo-input:focus {
   outline: none;
-  border-color: #667eea;
+  border-color: #600EE4;
 }
 
 .filters {
@@ -59,14 +59,14 @@
 }
 
 .filter-btn:hover {
-  border-color: #667eea;
+  border-color: #600EE4;
   background: #f5f5f5;
 }
 
 .filter-btn.active {
-  background: #667eea;
+  background: #600EE4;
   color: white;
-  border-color: #667eea;
+  border-color: #600EE4;
 }
 
 .todo-list {
@@ -87,8 +87,8 @@
 }
 
 .todo-item:hover {
-  border-color: #667eea;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  border-color: #600EE4;
+  box-shadow: 0 2px 8px rgba(96, 14, 228, 0.2);
 }
 
 .todo-item.completed {
@@ -157,14 +157,14 @@
 }
 
 .btn-primary {
-  background: #667eea;
+  background: #600EE4;
   color: white;
 }
 
 .btn-primary:hover {
-  background: #5568d3;
+  background: #4d0bb8;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 4px 12px rgba(96, 14, 228, 0.4);
 }
 
 .btn-edit {
