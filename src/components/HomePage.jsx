@@ -13,7 +13,7 @@ function HomePage() {
   return (
     <div className="homepage">
       <div className="homepage-hero">
-        <h1>Welcome to Task & Shop</h1>
+        <h1>Welcome to savyre task</h1>
         <p className="hero-subtitle">Manage your tasks and shopping in one place</p>
       </div>
 
