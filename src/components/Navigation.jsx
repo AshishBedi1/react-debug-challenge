@@ -1,40 +1,53 @@
 import { Link, useLocation } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 import './Navigation.css'
 
 function Navigation() {
   const location = useLocation()
+  const cartItems = useSelector((state) => state.cart.items)
+  const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-content">
-        <Link to="/" className="sidebar-logo">
-          <h2>Savyre Task</h2>
+    <nav className="navbar">
+      <div className="navbar-container">
+        <Link to="/" className="navbar-logo">
+          <h2>Savyre Shop</h2>
         </Link>
-        <nav className="sidebar-nav">
+        <div className="navbar-links">
           <Link
             to="/"
-            className={`sidebar-link ${location.pathname === '/' ? 'active' : ''}`}
+            className={`navbar-link ${location.pathname === '/' ? 'active' : ''}`}
           >
-            <span className="sidebar-icon">🏠</span>
+            <span className="navbar-icon">🏠</span>
             <span>Home</span>
           </Link>
           <Link
-            to="/todos"
-            className={`sidebar-link ${location.pathname === '/todos' ? 'active' : ''}`}
+            to="/products"
+            className={`navbar-link ${location.pathname === '/products' ? 'active' : ''}`}
           >
-            <span className="sidebar-icon">📝</span>
+            <span className="navbar-icon">🛍️</span>
+            <span>Shop</span>
+          </Link>
+          <Link
+            to="/todos"
+            className={`navbar-link ${location.pathname === '/todos' ? 'active' : ''}`}
+          >
+            <span className="navbar-icon">📝</span>
             <span>Tasks</span>
           </Link>
           <Link
             to="/cart"
-            className={`sidebar-link ${location.pathname === '/cart' ? 'active' : ''}`}
+            className={`navbar-link cart-link ${location.pathname === '/cart' ? 'active' : ''}`}
           >
-            <span className="sidebar-icon">🛒</span>
+            <span className="navbar-icon">🛒</span>
             <span>Cart</span>
+            {cartItemCount > 0 && (
+              <span className="cart-badge">{cartItemCount}</span>
+            )}
           </Link>
-        </nav>
+        </div>
       </div>
-    </aside>
+    </nav>
   )
 }
 

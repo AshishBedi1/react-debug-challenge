@@ -5,18 +5,13 @@
 .app {
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
 }
 
 .main-content {
   flex: 1;
-  margin-left: 250px;
-  min-height: 100vh;
-}
-
-@media (max-width: 768px) {
-  .main-content {
-    margin-left: 200px;
-  }
+  min-height: calc(100vh - 70px);
+  padding-top: 0;
 }
 
 .app-header {

@@ -3,6 +3,7 @@ import Navigation from './components/Navigation'
 import HomePage from './components/HomePage'
 import TodoManager from './components/TodoManager'
 import ShoppingCart from './components/ShoppingCart'
+import Products from './components/Products'
 import './App.css'
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/todos" element={<TodoManager />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/cart" element={<ShoppingCart />} />
         </Routes>
       </main>
