@@ -26,6 +26,265 @@ body {
   min-height: 100vh;
 }
 
+/* Dark theme (when .app.dark) */
+.app.dark {
+  --app-bg: #1a1a2e;
+  --app-surface: #16213e;
+  --app-text: #e8e8e8;
+  --app-text-muted: #a0a0a0;
+}
+
+.app.dark .main-content {
+  background: var(--app-bg, #1a1a2e);
+}
+
+.app.dark .homepage,
+.app.dark .products-page,
+.app.dark .contact-page {
+  background: var(--app-bg, #1a1a2e);
+}
+
+.app.dark .contact-header h1,
+.app.dark .contact-header p,
+.app.dark .products-header h1,
+.app.dark .products-header p,
+.app.dark .section-header h2,
+.app.dark .product-name,
+.app.dark .product-description,
+.app.dark .contact-form label {
+  color: var(--app-text);
+}
+
+.app.dark .product-description,
+.app.dark .contact-header p,
+.app.dark .products-header p {
+  color: var(--app-text-muted);
+}
+
+.app.dark .contact-form,
+.app.dark .product-card,
+.app.dark .cart-summary-content {
+  background: var(--app-surface, #16213e);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dark theme – Shopping Cart page */
+.app.dark .shopping-cart {
+  background: var(--app-bg, #1a1a2e);
+}
+
+.app.dark .cart-container {
+  background: var(--app-surface, #16213e);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.app.dark .cart-header,
+.app.dark .cart-header h1,
+.app.dark .cart-count,
+.app.dark .empty-cart h2,
+.app.dark .empty-cart p,
+.app.dark .cart-item-name,
+.app.dark .quantity-display,
+.app.dark .summary-row {
+  color: var(--app-text);
+}
+
+.app.dark .cart-item-unit-price {
+  color: var(--app-text-muted);
+}
+
+.app.dark .cart-header {
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.app.dark .empty-cart {
+  color: var(--app-text-muted);
+}
+
+.app.dark .cart-item {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.app.dark .cart-item:hover {
+  border-color: #600EE4;
+  box-shadow: 0 4px 12px rgba(96, 14, 228, 0.25);
+}
+
+.app.dark .cart-item-image-container,
+.app.dark .cart-item-placeholder {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.app.dark .quantity-controls {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.app.dark .cart-summary {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.app.dark .summary-row {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.app.dark .total-row {
+  border-top-color: rgba(255, 255, 255, 0.2);
+  color: #a78bfa;
+}
+
+/* Dark theme – Todo / Tasks page */
+.app.dark .todo-manager {
+  background: var(--app-bg, #1a1a2e);
+}
+
+.app.dark .todo-sidebar {
+  background: var(--app-surface, #16213e);
+  border-right-color: rgba(255, 255, 255, 0.1);
+}
+
+.app.dark .sidebar-header {
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.app.dark .logo-section h2 {
+  color: var(--app-text);
+}
+
+.app.dark .sidebar-filter {
+  color: var(--app-text-muted);
+}
+
+.app.dark .sidebar-filter:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--app-text);
+}
+
+.app.dark .sidebar-filter .filter-count {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--app-text-muted);
+}
+
+.app.dark .progress-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.app.dark .progress-label {
+  color: var(--app-text-muted);
+}
+
+.app.dark .progress-bar {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.app.dark .clear-completed-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.app.dark .stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.app.dark .stat-value {
+  color: var(--app-text);
+}
+
+.app.dark .stat-label {
+  color: var(--app-text-muted);
+}
+
+.app.dark .todo-main {
+  background: var(--app-bg, #1a1a2e);
+}
+
+.app.dark .todo-header {
+  background: var(--app-surface, #16213e);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.app.dark .todo-header h1 {
+  color: var(--app-text);
+}
+
+.app.dark .todo-subtitle {
+  color: var(--app-text-muted);
+}
+
+.app.dark .todo-list-container {
+  background: var(--app-bg, #1a1a2e);
+}
+
+.app.dark .todo-item {
+  background: var(--app-surface, #16213e);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.app.dark .todo-item:hover {
+  border-color: #600EE4;
+  box-shadow: 0 4px 12px rgba(96, 14, 228, 0.2);
+}
+
+.app.dark .todo-item.completed {
+  background: rgba(255, 255, 255, 0.03);
+  opacity: 0.85;
+}
+
+.app.dark .todo-item.completed .todo-text {
+  color: var(--app-text-muted);
+}
+
+.app.dark .todo-text,
+.app.dark .todo-date {
+  color: var(--app-text);
+}
+
+.app.dark .todo-input-container {
+  background: var(--app-surface, #16213e);
+  border-top-color: rgba(255, 255, 255, 0.1);
+}
+
+.app.dark .input-wrapper {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.app.dark .input-icon {
+  color: var(--app-text-muted);
+}
+
+.app.dark .input-wrapper:focus-within {
+  border-color: #600EE4;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0 0 4px rgba(96, 14, 228, 0.2);
+}
+
+.app.dark .todo-input,
+.app.dark .edit-input {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: var(--app-text);
+}
+
+.app.dark .todo-input::placeholder,
+.app.dark .edit-input::placeholder {
+  color: var(--app-text-muted);
+}
+
+.app.dark .empty-state h2,
+.app.dark .empty-state p {
+  color: var(--app-text);
+}
+
+.app.dark .empty-state p {
+  color: var(--app-text-muted);
+}
+
 /* Toast Customization */
 .Toastify__toast {
   border-radius: 12px;

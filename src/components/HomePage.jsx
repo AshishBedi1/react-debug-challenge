@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
-import { addToCart } from '../store/slices/cartSlice'
+import { useCart } from '../hooks/useCart'
+import ProductCard from './ProductCard'
 import './HomePage.css'
 
 const featuredProducts = [
@@ -40,21 +40,18 @@ const featuredProducts = [
 ]
 
 function HomePage() {
-  const dispatch = useDispatch()
-  const cartItems = useSelector((state) => state.cart.items)
+  const { cartItems, addToCart } = useCart()
 
   const handleAddToCart = (product) => {
     const existingItem = cartItems.find(item => item.id === product.id)
-    
-    dispatch(addToCart({
+    addToCart({
       id: product.id,
       name: product.name,
       price: product.price,
       quantity: 1,
       image: product.image,
       category: product.category
-    }))
-
+    })
     if (existingItem) {
       toast.success(`Added another ${product.name} to cart!`, {
         position: "top-right",
@@ -89,39 +86,11 @@ function HomePage() {
         </div>
         <div className="products-grid">
           {featuredProducts.map(product => (
-            <div key={product.id} className="product-card">
-              <div className="product-image-container">
-                <img 
-                  src={product.image} 
-                  alt={product.name}
-                  className="product-image"
-                  onError={(e) => {
-                    e.target.src = 'https://via.placeholder.com/400x400?text=Product+Image'
-                  }}
-                />
-                <div className="product-category">{product.category}</div>
-                <button 
-                  className="quick-add-btn"
-                  onClick={() => handleAddToCart(product)}
-                  title="Add to cart"
-                >
-                  🛒
-                </button>
-              </div>
-              <div className="product-info">
-                <h3 className="product-name">{product.name}</h3>
-                <p className="product-description">{product.description}</p>
-                <div className="product-footer">
-                  <span className="product-price">${product.price.toFixed(2)}</span>
-                  <button 
-                    className="btn-add-to-cart"
-                    onClick={() => handleAddToCart(product)}
-                  >
-                    Add to Cart
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ProductCard
+              key={product.id}
+              product={product}
+              onAddToCart={handleAddToCart}
+            />
           ))}
         </div>
       </div>

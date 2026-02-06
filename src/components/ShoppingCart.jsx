@@ -1,21 +1,20 @@
-import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import {
-  updateQuantity,
-  removeFromCart,
-  clearCart,
-} from '../store/slices/cartSlice'
+import { useCart } from '../hooks/useCart'
 import './ShoppingCart.css'
 
 function ShoppingCart() {
-  const dispatch = useDispatch()
-  const cartItems = useSelector((state) => state.cart.items)
+  const {
+    cartItems,
+    updateQuantity,
+    removeFromCart,
+    clearCart,
+  } = useCart()
 
   const handleUpdateQuantity = (id, newQuantity) => {
     if (newQuantity <= 0) {
       const item = cartItems.find(item => item.id === id)
-      dispatch(removeFromCart(id))
+      removeFromCart(id)
       if (item) {
         toast.info(`${item.name} removed from cart`, {
           position: "top-right",
@@ -24,12 +23,12 @@ function ShoppingCart() {
       }
       return
     }
-    dispatch(updateQuantity({ id, quantity: newQuantity }))
+    updateQuantity({ id, quantity: newQuantity })
   }
 
   const handleRemoveFromCart = (id) => {
     const item = cartItems.find(item => item.id === id)
-    dispatch(removeFromCart(id))
+    removeFromCart(id)
     if (item) {
       toast.info(`${item.name} removed from cart`, {
         position: "top-right",
@@ -39,7 +38,7 @@ function ShoppingCart() {
   }
 
   const handleClearCart = () => {
-    dispatch(clearCart())
+    clearCart()
     toast.warning('Cart cleared', {
       position: "top-right",
       autoClose: 2000,
