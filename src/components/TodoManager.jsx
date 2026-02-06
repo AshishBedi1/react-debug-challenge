@@ -1,63 +1,86 @@
-import { useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useState, useRef, useEffect } from 'react'
 import {
-  addTodo,
-  toggleComplete,
-  deleteTodo,
-  updateTodo,
-  setFilter,
-  setEditingId,
-  clearCompleted,
-} from '../store/slices/todosSlice'
+  FaPlus,
+  FaStar,
+  FaRegCircle,
+  FaCheck,
+  FaTimes,
+  FaPen,
+  FaPaperPlane,
+  FaPlusCircle,
+  FaClipboardList,
+} from 'react-icons/fa'
+import { useTodos } from '../hooks/useTodos'
 import './TodoManager.css'
 
 function TodoManager() {
-  const dispatch = useDispatch()
-  const { items: todos, filter, editingId } = useSelector((state) => state.todos)
+  const {
+    todos,
+    filter,
+    editingId,
+    addTodo: dispatchAddTodo,
+    toggleComplete,
+    deleteTodo,
+    updateTodo,
+    setFilter,
+    setEditingId,
+    clearCompleted,
+  } = useTodos()
   const [todoInput, setTodoInput] = useState('')
   const [editValue, setEditValue] = useState('')
+  const todoInputRef = useRef(null)
+
+  useEffect(() => {
+    if (todoInputRef.current && !editingId) {
+      todoInputRef.current.focus()
+    }
+  }, [editingId])
 
   const handleAddTodo = (e) => {
     e.preventDefault()
     const trimmedValue = todoInput.trim()
     if (trimmedValue === '') return
-
-    dispatch(addTodo(trimmedValue))
+    dispatchAddTodo(trimmedValue)
     setTodoInput('')
   }
 
   const handleToggleComplete = (id) => {
-    dispatch(toggleComplete(id))
+    toggleComplete(id)
   }
 
   const handleDeleteTodo = (id) => {
-    dispatch(deleteTodo(id))
+    deleteTodo(id)
   }
 
   const handleStartEdit = (id, text) => {
-    dispatch(setEditingId(id))
+    setEditingId(id)
     setEditValue(text)
   }
 
   const handleSaveEdit = (id) => {
     const trimmedValue = editValue.trim()
     if (trimmedValue === '') {
-      dispatch(deleteTodo(id))
+      deleteTodo(id)
       return
     }
-
-    dispatch(updateTodo({ id, text: trimmedValue }))
-    dispatch(setEditingId(null))
+    updateTodo({ id, text: trimmedValue })
+    setEditingId(null)
     setEditValue('')
   }
 
   const handleCancelEdit = () => {
-    dispatch(setEditingId(null))
+    setEditingId(null)
     setEditValue('')
   }
 
   const handleClearCompleted = () => {
-    dispatch(clearCompleted())
+    clearCompleted()
+  }
+
+  const focusTodoInput = () => {
+    if (todoInputRef.current) {
+      todoInputRef.current.focus()
+    }
   }
 
   const filteredTodos = todos.filter(todo => {
@@ -81,46 +104,35 @@ function TodoManager() {
           </div>
           <button 
             className="new-task-btn"
-            onClick={() => {
-              const input = document.querySelector('.todo-input')
-              if (input) input.focus()
-            }}
+            onClick={focusTodoInput}
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M8 3V13M3 8H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            </svg>
+            <FaPlus size={16} />
             New Task
           </button>
         </div>
         
         <div className="sidebar-filters">
           <button
-            onClick={() => dispatch(setFilter('all'))}
+            onClick={() => setFilter('all')}
             className={`sidebar-filter ${filter === 'all' ? 'active' : ''}`}
           >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M9 1L11.5 6.5L17 8L11.5 9.5L9 15L6.5 9.5L1 8L6.5 6.5L9 1Z" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-            </svg>
+            <FaStar size={18} />
             <span>All Tasks</span>
             <span className="filter-count">{todos.length}</span>
           </button>
           <button
-            onClick={() => dispatch(setFilter('active'))}
+            onClick={() => setFilter('active')}
             className={`sidebar-filter ${filter === 'active' ? 'active' : ''}`}
           >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <circle cx="9" cy="9" r="7" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-            </svg>
+            <FaRegCircle size={18} />
             <span>Active</span>
             <span className="filter-count">{activeTodoCount}</span>
           </button>
           <button
-            onClick={() => dispatch(setFilter('completed'))}
+            onClick={() => setFilter('completed')}
             className={`sidebar-filter ${filter === 'completed' ? 'active' : ''}`}
           >
-            <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-              <path d="M5 9L8 12L13 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
+            <FaCheck size={18} />
             <span>Completed</span>
             <span className="filter-count">{completedTodoCount}</span>
           </button>
@@ -143,9 +155,7 @@ function TodoManager() {
         {completedTodoCount > 0 && (
           <div className="sidebar-actions">
             <button onClick={handleClearCompleted} className="clear-completed-btn">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M4 4L12 12M4 12L12 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-              </svg>
+              <FaTimes size={16} />
               Clear Completed
             </button>
           </div>
@@ -197,10 +207,7 @@ function TodoManager() {
           {filteredTodos.length === 0 ? (
             <div className="empty-state">
               <div className="empty-illustration">
-                <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
-                  <circle cx="60" cy="60" r="50" stroke="#e5e7eb" strokeWidth="2" strokeDasharray="4 4"/>
-                  <path d="M40 60L55 75L80 45" stroke="#600EE4" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" opacity="0.3"/>
-                </svg>
+                <FaClipboardList size={120} style={{ color: '#e5e7eb' }} aria-hidden />
               </div>
               <h2>No tasks found</h2>
               <p>{todos.length === 0 
@@ -231,14 +238,10 @@ function TodoManager() {
                       />
                       <div className="edit-actions">
                         <button onClick={() => handleSaveEdit(todo.id)} className="action-btn save-btn" title="Save">
-                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M13 4L6 11L3 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
+                          <FaCheck size={16} />
                         </button>
                         <button onClick={handleCancelEdit} className="action-btn cancel-btn" title="Cancel">
-                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M4 4L12 12M4 12L12 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                          </svg>
+                          <FaTimes size={16} />
                         </button>
                       </div>
                     </div>
@@ -253,9 +256,7 @@ function TodoManager() {
                           id={`todo-${todo.id}`}
                         />
                         <label htmlFor={`todo-${todo.id}`} className="checkbox-label">
-                          <svg className="checkmark" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                            <path d="M3 7L6 10L11 4" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
+                          <FaCheck className="checkmark" size={14} style={{ color: 'white' }} />
                         </label>
                       </div>
                       <div className="todo-content">
@@ -277,18 +278,14 @@ function TodoManager() {
                           className="action-btn edit-btn"
                           title="Edit task"
                         >
-                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M11.5 2.5L13.5 4.5M2 14L10.5 5.5L12.5 7.5L4 16H2V14Z" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
+                          <FaPen size={16} />
                         </button>
                         <button 
                           onClick={() => handleDeleteTodo(todo.id)} 
                           className="action-btn delete-btn"
                           title="Delete task"
                         >
-                          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <path d="M4 4L12 12M4 12L12 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                          </svg>
+                          <FaTimes size={16} />
                         </button>
                       </div>
                     </>
@@ -304,12 +301,10 @@ function TodoManager() {
           <form onSubmit={handleAddTodo} className="todo-input-form">
             <div className="input-wrapper">
               <div className="input-icon">
-                <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5" fill="none"/>
-                  <path d="M10 6V14M6 10H14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                </svg>
+                <FaPlusCircle size={20} />
               </div>
               <input
+                ref={todoInputRef}
                 type="text"
                 value={todoInput}
                 onChange={(e) => setTodoInput(e.target.value)}
@@ -322,9 +317,7 @@ function TodoManager() {
                 disabled={!todoInput.trim()}
                 title="Add task"
               >
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <path d="M16 2L9 9M16 2L10 16L9 9M16 2L2 7L9 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
+                <FaPaperPlane size={18} />
               </button>
             </div>
           </form>
