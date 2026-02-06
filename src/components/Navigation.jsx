@@ -11,7 +11,7 @@ function Navigation() {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          <h2>Savyre Shop</h2>
+          <h2>Savyre </h2>
         </Link>
         <div className="navbar-links">
           <Link
