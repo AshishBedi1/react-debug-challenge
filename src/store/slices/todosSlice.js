@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-// Load initial state from localStorage
 const loadTodosFromStorage = () => {
   try {
     const savedTodos = localStorage.getItem('todos')
@@ -13,7 +12,7 @@ const loadTodosFromStorage = () => {
 
 const initialState = {
   items: loadTodosFromStorage(),
-  filter: 'all', // 'all', 'active', 'completed'
+  filter: 'all',
   editingId: null,
 }
 
@@ -29,7 +28,6 @@ const todosSlice = createSlice({
         createdAt: new Date().toISOString(),
       }
       state.items.push(newTodo)
-      // Save to localStorage
       localStorage.setItem('todos', JSON.stringify(state.items))
     },
     toggleComplete: (state, action) => {

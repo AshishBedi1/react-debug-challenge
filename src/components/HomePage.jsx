@@ -8,9 +8,13 @@ import ProductCard from './ProductCard'
 import './HomePage.css'
 
 function UserGreeting() {
-  const auth = useAuth()
-  if (!auth?.user) return null
-  return <p className="hero-promo" style={{ marginTop: '8px', fontSize: '14px', opacity: 0.9 }}>Welcome back, {auth.user.name}!</p>
+  const { user } = useAuth()
+  if (!user) return null
+  return (
+    <p className="hero-promo" style={{ marginTop: '8px', fontSize: '14px', opacity: 0.9 }}>
+      Welcome back, {user.name}!
+    </p>
+  )
 }
 
 const featuredProducts = [
@@ -50,9 +54,8 @@ const featuredProducts = [
 
 function HomePage() {
   const { cartItems, addToCart } = useCart()
-  const api = useApi()
+  const { baseUrl } = useApi()
   const [promoMessage, setPromoMessage] = useState(null)
-  const baseUrl = api?.baseUrl ?? 'https://jsonplaceholder.typicode.com'
 
   useEffect(() => {
     let cancelled = false
@@ -115,6 +118,7 @@ function HomePage() {
           <h1 className="hero-title">Welcome to Savyre Shop</h1>
           <p className="hero-subtitle">Discover amazing products at unbeatable prices</p>
           <UserGreeting />
+          {promoMessage && <p className="hero-promo" style={{ marginTop: '8px', fontSize: '14px', opacity: 0.9 }}>{promoMessage}</p>}
           <Link to="/products" className="hero-cta-button">
             Shop Now
           </Link>
@@ -155,7 +159,6 @@ function HomePage() {
           </div>
         </div>
       )}
-
     </div>
   )
 }

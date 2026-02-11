@@ -16,7 +16,7 @@ function Navigation() {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          <h2>Savyre</h2>
+          <h2>Savyre {userDisplayName ? `· ${userDisplayName}` : ''}</h2>
         </Link>
         <div className="navbar-links">
           <Link

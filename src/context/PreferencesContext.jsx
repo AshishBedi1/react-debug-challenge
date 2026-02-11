@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from 'react'
 
-const PreferencesContext = createContext(null)
+const defaultPreferences = { currency: 'USD', notifications: true, setCurrency: () => {}, setNotifications: () => {} }
+const PreferencesContext = createContext(defaultPreferences)
 
 export function PreferencesProvider({ children }) {
   const [currency, setCurrency] = useState('USD')
@@ -22,6 +23,5 @@ export function PreferencesProvider({ children }) {
 
 export function usePreferences() {
   const ctx = useContext(PreferencesContext)
-  if (!ctx) return { currency: 'USD', notifications: true }
   return ctx
 }

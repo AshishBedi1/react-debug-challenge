@@ -4,6 +4,7 @@ import { useTheme } from '../context/ThemeContext'
 import { usePreferences } from '../context/PreferencesContext'
 import { toast } from 'react-toastify'
 import { useCart } from '../hooks/useCart'
+import { useLocale } from '../context/LocaleContext'
 import ProductCard from './ProductCard'
 import './Products.css'
 
@@ -270,6 +271,7 @@ function Products() {
   const { cartItems, addToCart } = useCart()
   const { config } = useTheme()
   const { currency } = usePreferences()
+  const { locale } = useLocale()
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
   const productsPerPage = 8
@@ -377,7 +379,7 @@ function Products() {
             style={{ marginBottom: '12px', padding: '8px 12px', width: '260px', borderRadius: '8px', border: '1px solid #ddd' }}
           />
           <div className="products-count">
-            Showing {startIndex + 1}-{Math.min(endIndex, products.length)} of {products.length} products · Theme: {config.label} · {currency}
+            Showing {startIndex + 1}-{Math.min(endIndex, products.length)} of {products.length} products · Theme: {config.label} · {currency} · {locale}
           </div>
         </div>
 

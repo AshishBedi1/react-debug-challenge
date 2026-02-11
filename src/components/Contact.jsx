@@ -4,16 +4,10 @@ import { useLocale } from '../context/LocaleContext'
 import { usePreferences } from '../context/PreferencesContext'
 import './Contact.css'
 
-const initialForm = { name: '', email: '', subject: '', message: '' }
-
-function getInitialForm() {
-  return { name: '', email: '', subject: '', message: '' }
-}
-
 function Contact() {
-  const localeCtx = useLocale()
+  const { locale } = useLocale()
   const { currency } = usePreferences()
-  const [form, setForm] = useState(() => getInitialForm())
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [errors, setErrors] = useState({})
   const [phone, setPhone] = useState('')
 
@@ -42,7 +36,7 @@ function Contact() {
       position: 'top-right',
       autoClose: 3000,
     })
-    setForm(getInitialForm())
+    setForm({ name: '', email: '', subject: '', message: '' })
     setErrors({})
     setPhone('')
   }
@@ -52,7 +46,7 @@ function Contact() {
       <div className="contact-container">
         <div className="contact-header">
           <h1>📬 Contact Us</h1>
-          <p>Have a question? Send us a message and we'll respond as soon as we can. {localeCtx ? `(Locale: ${localeCtx.locale})` : '(Locale: not set)'} · Display: {currency}</p>
+          <p>Have a question? Send us a message and we'll respond as soon as we can. (Locale: {locale}) · Display: {currency}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="contact-form" noValidate>
@@ -148,8 +142,9 @@ function Contact() {
               type="button"
               className="btn-reset"
               onClick={() => {
-                setForm(getInitialForm())
+                setForm({ name: '', email: '', subject: '', message: '' })
                 setErrors({})
+                setPhone('')
               }}
             >
               Reset

@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-// Load initial state from localStorage
 const loadCartFromStorage = () => {
   try {
     const savedCart = localStorage.getItem('cartItems')
@@ -21,23 +20,18 @@ const cartSlice = createSlice({
   reducers: {
     addToCart: (state, action) => {
       const { id, name, price, quantity, image, category } = action.payload
-      // Check if item already exists in cart
       const existingItem = state.items.find(item => item.id === id)
-      
       if (existingItem) {
-        // If exists, increase quantity
         existingItem.quantity += quantity || 1
       } else {
-        // If new, add to cart
-        const newItem = {
+        state.items.push({
           id: id || Date.now(),
           name,
           price,
           quantity: quantity || 1,
           image: image || '',
           category: category || '',
-        }
-        state.items.push(newItem)
+        })
       }
       localStorage.setItem('cartItems', JSON.stringify(state.items))
     },

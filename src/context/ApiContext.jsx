@@ -1,6 +1,7 @@
 import { createContext, useContext } from 'react'
 
-const ApiContext = createContext(null)
+const defaultApi = { baseUrl: 'https://jsonplaceholder.typicode.com' }
+const ApiContext = createContext(defaultApi)
 
 export function ApiProvider({ children }) {
   const value = {
