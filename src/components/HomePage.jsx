@@ -118,7 +118,6 @@ function HomePage() {
           <h1 className="hero-title">Welcome to Savyre Shop</h1>
           <p className="hero-subtitle">Discover amazing products at unbeatable prices</p>
           <UserGreeting />
-          {promoMessage && <p className="hero-promo" style={{ marginTop: '8px', fontSize: '14px', opacity: 0.9 }}>{promoMessage}</p>}
           <Link to="/products" className="hero-cta-button">
             Shop Now
           </Link>
