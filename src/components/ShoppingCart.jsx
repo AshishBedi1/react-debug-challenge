@@ -6,10 +6,13 @@ import './ShoppingCart.css'
 
 function couponReducer(state, action) {
   if (action.type === 'APPLY') {
-    return { ...state, discount: 10, code: action.code }
+    if (action.code.trim().toLowerCase() === 'test') {
+      return { discount: 10, code: action.code.trim(), error: '' }
+    }
+    return { ...state, error: 'Invalid coupon code' }
   }
   if (action.type === 'CLEAR') {
-    return { discount: 0, code: '' }
+    return { discount: 0, code: '', error: '' }
   }
   return state
 }
@@ -22,7 +25,7 @@ function ShoppingCart() {
     clearCart,
   } = useCart()
 
-  const [couponState, dispatchCoupon] = useReducer(couponReducer, { discount: 0, code: '' })
+  const [couponState, dispatchCoupon] = useReducer(couponReducer, { discount: 0, code: '', error: '' })
   const [couponInput, setCouponInput] = useState('')
 
   const handleUpdateQuantity = (id, newQuantity) => {
@@ -162,10 +165,13 @@ function ShoppingCart() {
                 </div>
                 
                 <div className="cart-summary">
+                  <p style={{ fontSize: '13px', color: '#666', marginBottom: '8px' }}>
+                    Have a coupon? Use code <strong>test</strong> to get $10 off your order.
+                  </p>
                   <div className="coupon-row" style={{ marginBottom: '12px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                     <input
                       type="text"
-                      placeholder="Coupon code"
+                      placeholder="Enter coupon code"
                       value={couponInput}
                       onChange={(e) => setCouponInput(e.target.value)}
                       style={{ padding: '8px', flex: 1, minWidth: '120px' }}
@@ -173,13 +179,21 @@ function ShoppingCart() {
                     <button
                       type="button"
                       className="btn-continue-shopping"
-                      onClick={() => dispatchCoupon({ type: 'APPLY', code: couponInput })}
+                      onClick={() => {
+                        dispatchCoupon({ type: 'APPLY', code: couponInput })
+                        if (couponInput.trim().toLowerCase() === 'test') setCouponInput('')
+                      }}
                     >
                       Apply
                     </button>
                     {couponState.code && (
-                      <span style={{ alignSelf: 'center', fontSize: '14px' }}>
-                        {couponState.code} (−${couponState.discount})
+                      <span style={{ alignSelf: 'center', fontSize: '14px', color: '#16a34a' }}>
+                        ✓ {couponState.code} applied (−${couponState.discount})
+                      </span>
+                    )}
+                    {couponState.error && (
+                      <span style={{ alignSelf: 'center', fontSize: '14px', color: '#dc2626' }}>
+                        {couponState.error}
                       </span>
                     )}
                   </div>
