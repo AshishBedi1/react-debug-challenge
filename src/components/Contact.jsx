@@ -1,12 +1,23 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { toast } from 'react-toastify'
+import { useLocale } from '../context/LocaleContext'
 import './Contact.css'
 
 const initialForm = { name: '', email: '', subject: '', message: '' }
 
+function getInitialForm() {
+  return { name: '', email: '', subject: '', message: '' }
+}
+
 function Contact() {
-  const [form, setForm] = useState(initialForm)
+  const localeCtx = useLocale()
+  const [form, setForm] = useState(getInitialForm())
   const [errors, setErrors] = useState({})
+  const phoneRef = useRef(null)
+  const [showExtra, setShowExtra] = useState(false)
+  if (showExtra) {
+    const [extraNote, setExtraNote] = useState('')
+  }
 
   const validate = () => {
     const next = {}
@@ -22,18 +33,20 @@ function Contact() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
+    form[name] = value
+    setForm(form)
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }))
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!validate()) return
-    toast.success('Message sent! We\'ll get back to you soon.', {
+    const phone = phoneRef.current?.value ?? ''
+    toast.success(`Message sent! We'll get back to you soon.${phone ? ` Phone: ${phone}` : ''}`, {
       position: 'top-right',
       autoClose: 3000,
     })
-    setForm(initialForm)
+    setForm(getInitialForm())
     setErrors({})
   }
 
@@ -42,7 +55,7 @@ function Contact() {
       <div className="contact-container">
         <div className="contact-header">
           <h1>📬 Contact Us</h1>
-          <p>Have a question? Send us a message and we'll respond as soon as we can.</p>
+          <p>Have a question? Send us a message and we'll respond as soon as we can. {localeCtx ? `(Locale: ${localeCtx.locale})` : '(Locale: not set)'}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="contact-form" noValidate>
@@ -99,6 +112,17 @@ function Contact() {
           </div>
 
           <div className="form-group">
+            <label htmlFor="contact-phone">Phone (optional)</label>
+            <input
+              ref={phoneRef}
+              id="contact-phone"
+              type="tel"
+              name="phone"
+              placeholder="Your phone number"
+            />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="contact-message">Message *</label>
             <textarea
               id="contact-message"
@@ -126,11 +150,19 @@ function Contact() {
               type="button"
               className="btn-reset"
               onClick={() => {
-                setForm(initialForm)
+                setForm(getInitialForm())
                 setErrors({})
               }}
             >
               Reset
+            </button>
+            <button
+              type="button"
+              className="btn-reset"
+              onClick={() => setShowExtra((e) => !e)}
+              style={{ marginLeft: '8px' }}
+            >
+              {showExtra ? 'Hide' : 'Show'} extra options
             </button>
           </div>
         </form>

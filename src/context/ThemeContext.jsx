@@ -23,7 +23,8 @@ export function ThemeProvider({ children }) {
     })
   }, [])
 
-  const value = { theme, toggleTheme, isDark: theme === 'dark' }
+  const themeLabel = useCallback(() => (theme === 'dark' ? 'Dark' : 'Light'), [])
+  const value = { theme, toggleTheme, isDark: theme === 'dark', themeLabel }
   return (
     <ThemeContext.Provider value={value}>
       {children}

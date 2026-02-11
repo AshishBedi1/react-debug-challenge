@@ -6,7 +6,7 @@ import './Navigation.css'
 
 function Navigation() {
   const location = useLocation()
-  const { toggleTheme, isDark } = useTheme()
+  const { toggleTheme, isDark, themeLabel } = useTheme()
   const cartItems = useSelector((state) => state.cart.items)
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
@@ -59,8 +59,8 @@ function Navigation() {
             type="button"
             className="theme-toggle"
             onClick={toggleTheme}
-            title={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
-            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            title={themeLabel()}
+            aria-label={themeLabel()}
           >
             {isDark ? <FaSun size={20} /> : <FaMoon size={20} />}
           </button>

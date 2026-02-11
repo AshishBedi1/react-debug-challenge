@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useCart } from '../hooks/useCart'
@@ -41,6 +42,26 @@ const featuredProducts = [
 
 function HomePage() {
   const { cartItems, addToCart } = useCart()
+  const [promoMessage, setPromoMessage] = useState(null)
+
+  useEffect(() => {
+    let cancelled = false
+    async function loadPromo() {
+      const res = await fetch('https://jsonplaceholder.typicode.com/posts/1')
+      const data = await res.json()
+      if (!cancelled) setPromoMessage(data.title)
+    }
+    loadPromo()
+  }, [])
+
+  useEffect(() => {
+    async function loadUser() {
+      const res = await fetch('https://jsonplaceholder.typicode.com/users/1')
+      const user = await res.json()
+      setPromoMessage((prev) => (prev ? `${prev} • Hi ${user.name}` : `Hi ${user.name}`))
+    }
+    loadUser()
+  }, [])
 
   const handleAddToCart = (product) => {
     const existingItem = cartItems.find(item => item.id === product.id)
@@ -72,6 +93,7 @@ function HomePage() {
         <div className="hero-content">
           <h1 className="hero-title">Welcome to Savyre Shop</h1>
           <p className="hero-subtitle">Discover amazing products at unbeatable prices</p>
+          
           <Link to="/products" className="hero-cta-button">
             Shop Now
           </Link>

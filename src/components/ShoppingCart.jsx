@@ -1,7 +1,20 @@
 import { Link } from 'react-router-dom'
+import { useState, useReducer } from 'react'
 import { toast } from 'react-toastify'
 import { useCart } from '../hooks/useCart'
 import './ShoppingCart.css'
+
+function couponReducer(state, action) {
+  if (action.type === 'APPLY') {
+    state.discount = 10
+    state.code = action.code
+    return state
+  }
+  if (action.type === 'CLEAR') {
+    return { discount: 0, code: '' }
+  }
+  return state
+}
 
 function ShoppingCart() {
   const {
@@ -10,6 +23,9 @@ function ShoppingCart() {
     removeFromCart,
     clearCart,
   } = useCart()
+
+  const [couponState, dispatchCoupon] = useReducer(couponReducer, { discount: 0, code: '' })
+  const [couponInput, setCouponInput] = useState('')
 
   const handleUpdateQuantity = (id, newQuantity) => {
     if (newQuantity <= 0) {
@@ -51,8 +67,9 @@ function ShoppingCart() {
 
   const calculateTotal = () => {
     const subtotal = calculateSubtotal()
-    const tax = subtotal * 0.1 // 10% tax
-    return subtotal + tax
+    const tax = subtotal * 0.1
+    const afterDiscount = subtotal - couponState.discount
+    return afterDiscount + tax
   }
 
   return (
@@ -147,6 +164,27 @@ function ShoppingCart() {
                 </div>
                 
                 <div className="cart-summary">
+                  <div className="coupon-row" style={{ marginBottom: '12px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                    <input
+                      type="text"
+                      placeholder="Coupon code"
+                      value={couponInput}
+                      onChange={(e) => setCouponInput(e.target.value)}
+                      style={{ padding: '8px', flex: 1, minWidth: '120px' }}
+                    />
+                    <button
+                      type="button"
+                      className="btn-continue-shopping"
+                      onClick={() => dispatchCoupon({ type: 'APPLY', code: couponInput })}
+                    >
+                      Apply
+                    </button>
+                    {couponState.code && (
+                      <span style={{ alignSelf: 'center', fontSize: '14px' }}>
+                        {couponState.code} (−${couponState.discount})
+                      </span>
+                    )}
+                  </div>
                   <div className="summary-row">
                     <span>Subtotal ({cartItems.reduce((sum, item) => sum + item.quantity, 0)} items):</span>
                     <span>${calculateSubtotal().toFixed(2)}</span>
@@ -159,6 +197,12 @@ function ShoppingCart() {
                     <span>Tax (10%):</span>
                     <span>${(calculateSubtotal() * 0.1).toFixed(2)}</span>
                   </div>
+                  {couponState.discount > 0 && (
+                    <div className="summary-row">
+                      <span>Discount:</span>
+                      <span>−${couponState.discount.toFixed(2)}</span>
+                    </div>
+                  )}
                   <div className="summary-row total-row">
                     <span>Total:</span>
                     <span>${calculateTotal().toFixed(2)}</span>

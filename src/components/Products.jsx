@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo, useCallback } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { toast } from 'react-toastify'
 import { useCart } from '../hooks/useCart'
@@ -267,13 +267,30 @@ const products = [
 function Products() {
   const { cartItems, addToCart } = useCart()
   const [currentPage, setCurrentPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
   const productsPerPage = 8
 
-  // Calculate pagination
   const totalPages = Math.ceil(products.length / productsPerPage)
   const startIndex = (currentPage - 1) * productsPerPage
   const endIndex = startIndex + productsPerPage
-  const currentProducts = products.slice(startIndex, endIndex)
+  const pageProducts = products.slice(startIndex, endIndex)
+
+  const currentProducts = useMemo(() => {
+    if (!searchTerm.trim()) return pageProducts
+    const term = searchTerm.toLowerCase()
+    return pageProducts.filter(p => p.name.toLowerCase().includes(term) || p.category.toLowerCase().includes(term))
+  }, [pageProducts, searchTerm])
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Stale closure: callback uses currentPage but deps are [] - always sees initial value
+  const handleNextPage = useCallback(() => {
+    setCurrentPage(currentPage + 1)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
 
   const handleAddToCart = (product) => {
     const existingItem = cartItems.find(item => item.id === product.id)
@@ -305,11 +322,6 @@ function Products() {
         icon: "🛒",
       })
     }
-  }
-
-  const handlePageChange = (page) => {
-    setCurrentPage(page)
-    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   const getPageNumbers = () => {
@@ -353,6 +365,14 @@ function Products() {
         <div className="products-header">
           <h1>🛍️ Our Products</h1>
           <p>Discover amazing products at great prices</p>
+          <input
+            type="text"
+            placeholder="Search on this page..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="products-search"
+            style={{ marginBottom: '12px', padding: '8px 12px', width: '260px', borderRadius: '8px', border: '1px solid #ddd' }}
+          />
           <div className="products-count">
             Showing {startIndex + 1}-{Math.min(endIndex, products.length)} of {products.length} products
           </div>
@@ -398,7 +418,7 @@ function Products() {
             
             <button
               className="pagination-btn"
-              onClick={() => handlePageChange(currentPage + 1)}
+              onClick={handleNextPage}
               disabled={currentPage === totalPages}
             >
               Next
