@@ -1,6 +1,7 @@
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useLocale } from '../context/LocaleContext'
+import { usePreferences } from '../context/PreferencesContext'
 import './Contact.css'
 
 const initialForm = { name: '', email: '', subject: '', message: '' }
@@ -11,13 +12,10 @@ function getInitialForm() {
 
 function Contact() {
   const localeCtx = useLocale()
-  const [form, setForm] = useState(getInitialForm())
+  const { currency } = usePreferences()
+  const [form, setForm] = useState(() => getInitialForm())
   const [errors, setErrors] = useState({})
-  const phoneRef = useRef(null)
-  const [showExtra, setShowExtra] = useState(false)
-  if (showExtra) {
-    const [extraNote, setExtraNote] = useState('')
-  }
+  const [phone, setPhone] = useState('')
 
   const validate = () => {
     const next = {}
@@ -33,21 +31,20 @@ function Contact() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    form[name] = value
-    setForm(form)
+    setForm((prev) => ({ ...prev, [name]: value }))
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }))
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!validate()) return
-    const phone = phoneRef.current?.value ?? ''
     toast.success(`Message sent! We'll get back to you soon.${phone ? ` Phone: ${phone}` : ''}`, {
       position: 'top-right',
       autoClose: 3000,
     })
     setForm(getInitialForm())
     setErrors({})
+    setPhone('')
   }
 
   return (
@@ -55,7 +52,7 @@ function Contact() {
       <div className="contact-container">
         <div className="contact-header">
           <h1>📬 Contact Us</h1>
-          <p>Have a question? Send us a message and we'll respond as soon as we can. {localeCtx ? `(Locale: ${localeCtx.locale})` : '(Locale: not set)'}</p>
+          <p>Have a question? Send us a message and we'll respond as soon as we can. {localeCtx ? `(Locale: ${localeCtx.locale})` : '(Locale: not set)'} · Display: {currency}</p>
         </div>
 
         <form onSubmit={handleSubmit} className="contact-form" noValidate>
@@ -114,10 +111,11 @@ function Contact() {
           <div className="form-group">
             <label htmlFor="contact-phone">Phone (optional)</label>
             <input
-              ref={phoneRef}
               id="contact-phone"
               type="tel"
               name="phone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
               placeholder="Your phone number"
             />
           </div>
@@ -155,14 +153,6 @@ function Contact() {
               }}
             >
               Reset
-            </button>
-            <button
-              type="button"
-              className="btn-reset"
-              onClick={() => setShowExtra((e) => !e)}
-              style={{ marginLeft: '8px' }}
-            >
-              {showExtra ? 'Hide' : 'Show'} extra options
             </button>
           </div>
         </form>

@@ -2,8 +2,16 @@ import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { useCart } from '../hooks/useCart'
+import { useAuth } from '../context/AuthContext'
+import { useApi } from '../context/ApiContext'
 import ProductCard from './ProductCard'
 import './HomePage.css'
+
+function UserGreeting() {
+  const auth = useAuth()
+  if (!auth?.user) return null
+  return <p className="hero-promo" style={{ marginTop: '8px', fontSize: '14px', opacity: 0.9 }}>Welcome back, {auth.user.name}!</p>
+}
 
 const featuredProducts = [
   {
@@ -42,26 +50,39 @@ const featuredProducts = [
 
 function HomePage() {
   const { cartItems, addToCart } = useCart()
+  const api = useApi()
   const [promoMessage, setPromoMessage] = useState(null)
+  const baseUrl = api?.baseUrl ?? 'https://jsonplaceholder.typicode.com'
 
   useEffect(() => {
     let cancelled = false
     async function loadPromo() {
-      const res = await fetch('https://jsonplaceholder.typicode.com/posts/1')
-      const data = await res.json()
-      if (!cancelled) setPromoMessage(data.title)
+      try {
+        const res = await fetch(`${baseUrl}/posts/1`)
+        const data = await res.json()
+        if (!cancelled) setPromoMessage(data.title)
+      } catch {
+        if (!cancelled) setPromoMessage(null)
+      }
     }
     loadPromo()
-  }, [])
+    return () => { cancelled = true }
+  }, [baseUrl])
 
   useEffect(() => {
+    let cancelled = false
     async function loadUser() {
-      const res = await fetch('https://jsonplaceholder.typicode.com/users/1')
-      const user = await res.json()
-      setPromoMessage((prev) => (prev ? `${prev} • Hi ${user.name}` : `Hi ${user.name}`))
+      try {
+        const res = await fetch(`${baseUrl}/users/1`)
+        const user = await res.json()
+        if (!cancelled) setPromoMessage((prev) => (prev ? `${prev} • Hi ${user.name}` : `Hi ${user.name}`))
+      } catch {
+        if (!cancelled) setPromoMessage((prev) => prev || null)
+      }
     }
     loadUser()
-  }, [])
+    return () => { cancelled = true }
+  }, [baseUrl])
 
   const handleAddToCart = (product) => {
     const existingItem = cartItems.find(item => item.id === product.id)
@@ -93,7 +114,7 @@ function HomePage() {
         <div className="hero-content">
           <h1 className="hero-title">Welcome to Savyre Shop</h1>
           <p className="hero-subtitle">Discover amazing products at unbeatable prices</p>
-          
+          <UserGreeting />
           <Link to="/products" className="hero-cta-button">
             Shop Now
           </Link>

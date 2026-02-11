@@ -19,5 +19,6 @@ export function useCart() {
     addToCart: (payload) => dispatch(addToCartAction(payload)),
     updateQuantity: (payload) => dispatch(updateQuantity(payload)),
     removeFromCart: (id) => dispatch(removeFromCart(id)),
+    clearCart: () => dispatch(clearCart()),
   }
 }

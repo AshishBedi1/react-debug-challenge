@@ -1,5 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
 import { useTheme } from './context/ThemeContext'
+import { PreferencesProvider } from './context/PreferencesContext'
 import Navigation from './components/Navigation'
 import HomePage from './components/HomePage'
 import TodoManager from './components/TodoManager'
@@ -14,13 +15,15 @@ function App() {
     <div className={`app ${theme}`}>
       <Navigation />
       <main className="main-content">
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/todos" element={<TodoManager />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/cart" element={<ShoppingCart />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
+        <PreferencesProvider>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/todos" element={<TodoManager />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/cart" element={<ShoppingCart />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </PreferencesProvider>
       </main>
     </div>
   )

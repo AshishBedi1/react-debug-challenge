@@ -2,11 +2,13 @@ import { Link, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { FaHome, FaShoppingBag, FaTasks, FaEnvelope, FaShoppingCart, FaSun, FaMoon } from 'react-icons/fa'
 import { useTheme } from '../context/ThemeContext'
+import { useAuth } from '../context/AuthContext'
 import './Navigation.css'
 
 function Navigation() {
   const location = useLocation()
   const { toggleTheme, isDark, themeLabel } = useTheme()
+  const { userDisplayName } = useAuth()
   const cartItems = useSelector((state) => state.cart.items)
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
@@ -14,7 +16,7 @@ function Navigation() {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          <h2>Savyre </h2>
+          <h2>Savyre</h2>
         </Link>
         <div className="navbar-links">
           <Link

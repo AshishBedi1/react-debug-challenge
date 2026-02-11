@@ -1,5 +1,7 @@
 import { useState, useMemo, useCallback } from 'react'
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+import { useTheme } from '../context/ThemeContext'
+import { usePreferences } from '../context/PreferencesContext'
 import { toast } from 'react-toastify'
 import { useCart } from '../hooks/useCart'
 import ProductCard from './ProductCard'
@@ -266,6 +268,8 @@ const products = [
 
 function Products() {
   const { cartItems, addToCart } = useCart()
+  const { config } = useTheme()
+  const { currency } = usePreferences()
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
   const productsPerPage = 8
@@ -286,9 +290,8 @@ function Products() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
-  // Stale closure: callback uses currentPage but deps are [] - always sees initial value
   const handleNextPage = useCallback(() => {
-    setCurrentPage(currentPage + 1)
+    setCurrentPage((p) => p + 1)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
@@ -374,7 +377,7 @@ function Products() {
             style={{ marginBottom: '12px', padding: '8px 12px', width: '260px', borderRadius: '8px', border: '1px solid #ddd' }}
           />
           <div className="products-count">
-            Showing {startIndex + 1}-{Math.min(endIndex, products.length)} of {products.length} products
+            Showing {startIndex + 1}-{Math.min(endIndex, products.length)} of {products.length} products · Theme: {config.label} · {currency}
           </div>
         </div>
 

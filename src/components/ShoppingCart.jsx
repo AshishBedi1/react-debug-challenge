@@ -6,9 +6,7 @@ import './ShoppingCart.css'
 
 function couponReducer(state, action) {
   if (action.type === 'APPLY') {
-    state.discount = 10
-    state.code = action.code
-    return state
+    return { ...state, discount: 10, code: action.code }
   }
   if (action.type === 'CLEAR') {
     return { discount: 0, code: '' }

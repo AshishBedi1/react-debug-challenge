@@ -29,9 +29,8 @@ function TodoManager() {
   const [todoInput, setTodoInput] = useState('')
   const [editValue, setEditValue] = useState('')
   const todoInputRef = useRef(null)
-  const lastSavedRef = useRef(Date.now())
   const [lastUpdated, setLastUpdated] = useState(null)
-  const pendingDraftCountRef = useRef(0)
+  const [draftsOpenedCount, setDraftsOpenedCount] = useState(0)
 
   useEffect(() => {
     if (todoInputRef.current && !editingId) {
@@ -39,19 +38,12 @@ function TodoManager() {
     }
   }, [editingId])
 
-  // Updates "last updated" every 5s; no cleanup - interval keeps running after unmount
   useEffect(() => {
     const id = setInterval(() => {
       setLastUpdated(Date.now())
     }, 5000)
+    return () => clearInterval(id)
   }, [])
-
-  // Uses filter in body but missing from dependency array - stale filter when it changes
-  useEffect(() => {
-    if (filter === 'completed' && todos.length === 0) {
-      lastSavedRef.current = Date.now()
-    }
-  }, [todos.length])
 
   const handleAddTodo = (e) => {
     e.preventDefault()
@@ -98,7 +90,7 @@ function TodoManager() {
     if (todoInputRef.current) {
       todoInputRef.current.focus()
     }
-    pendingDraftCountRef.current += 1
+    setDraftsOpenedCount((c) => c + 1)
   }
 
   const filteredTodos = todos.filter(todo => {
@@ -195,7 +187,7 @@ function TodoManager() {
           <div className="stat-card">
             <div className="stat-icon active">✏️</div>
             <div className="stat-info">
-              <span className="stat-value">{pendingDraftCountRef.current}</span>
+              <span className="stat-value">{draftsOpenedCount}</span>
               <span className="stat-label">Drafts opened</span>
             </div>
           </div>
