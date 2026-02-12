@@ -1,9 +1,29 @@
 import { Link, useLocation } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import { FaHome, FaShoppingBag, FaTasks, FaEnvelope, FaShoppingCart, FaSun, FaMoon } from 'react-icons/fa'
+import {
+  FaHome, FaShoppingBag, FaTasks, FaEnvelope, FaShoppingCart,
+  FaSun, FaMoon, FaChartBar, FaUsers, FaBlog, FaNewspaper,
+  FaCog, FaDatabase, FaClipboardList, FaColumns, FaBalanceScale
+} from 'react-icons/fa'
 import { useTheme } from '../context/ThemeContext'
 import { useAuth } from '../context/AuthContext'
 import './Navigation.css'
+
+const navLinks = [
+  { path: '/', label: 'Home', icon: FaHome },
+  { path: '/dashboard', label: 'Dashboard', icon: FaChartBar },
+  { path: '/products', label: 'Shop', icon: FaShoppingBag },
+  { path: '/users', label: 'Users', icon: FaUsers },
+  { path: '/todos', label: 'Tasks', icon: FaTasks },
+  { path: '/task-board', label: 'Task Board', icon: FaColumns },
+  { path: '/blog', label: 'Blog', icon: FaBlog },
+  { path: '/news', label: 'News', icon: FaNewspaper },
+  { path: '/data-explorer', label: 'Explorer', icon: FaDatabase },
+  { path: '/compare', label: 'Compare', icon: FaBalanceScale },
+  { path: '/register', label: 'Register', icon: FaClipboardList },
+  { path: '/settings', label: 'Settings', icon: FaCog },
+  { path: '/contact', label: 'Contact', icon: FaEnvelope },
+]
 
 function Navigation() {
   const location = useLocation()
@@ -16,37 +36,10 @@ function Navigation() {
     <nav className="navbar">
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
-          <h2>Savyre </h2>
+          <h2>Savyre</h2>
         </Link>
-        <div className="navbar-links">
-          <Link
-            to="/"
-            className={`navbar-link ${location.pathname === '/' ? 'active' : ''}`}
-          >
-            <span className="navbar-icon"><FaHome size={18} /></span>
-            <span>Home</span>
-          </Link>
-          <Link
-            to="/products"
-            className={`navbar-link ${location.pathname === '/products' ? 'active' : ''}`}
-          >
-            <span className="navbar-icon"><FaShoppingBag size={18} /></span>
-            <span>Shop</span>
-          </Link>
-          <Link
-            to="/todos"
-            className={`navbar-link ${location.pathname === '/todos' ? 'active' : ''}`}
-          >
-            <span className="navbar-icon"><FaTasks size={18} /></span>
-            <span>Tasks</span>
-          </Link>
-          <Link
-            to="/contact"
-            className={`navbar-link ${location.pathname === '/contact' ? 'active' : ''}`}
-          >
-            <span className="navbar-icon"><FaEnvelope size={18} /></span>
-            <span>Contact</span>
-          </Link>
+
+        <div className="navbar-actions">
           <Link
             to="/cart"
             className={`navbar-link cart-link ${location.pathname === '/cart' ? 'active' : ''}`}
@@ -66,6 +59,24 @@ function Navigation() {
           >
             {isDark ? <FaSun size={20} /> : <FaMoon size={20} />}
           </button>
+        </div>
+      </div>
+
+      <div className="navbar-links-row">
+        <div className="navbar-links">
+          {navLinks.map((link) => {
+            const Icon = link.icon
+            return (
+              <Link
+                key={link.path}
+                to={link.path}
+                className={`navbar-link ${location.pathname === link.path ? 'active' : ''}`}
+              >
+                <Icon size={14} />
+                <span>{link.label}</span>
+              </Link>
+            )
+          })}
         </div>
       </div>
     </nav>
