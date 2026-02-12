@@ -9,6 +9,7 @@ import { ThemeProvider } from './context/ThemeContext'
 import { AuthProvider } from './context/AuthContext'
 import { ApiProvider } from './context/ApiContext'
 import { LocaleProvider } from './context/LocaleContext'
+import './utils/ssrHelpers'
 import './index.css'
 import App from './App.jsx'
 
