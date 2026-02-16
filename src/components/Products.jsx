@@ -5,6 +5,7 @@ import { usePreferences } from '../context/PreferencesContext'
 import { toast } from 'react-toastify'
 import { useCart } from '../hooks/useCart'
 import { useLocale } from '../context/LocaleContext'
+import { useTranslation } from '../hooks/useTranslation'
 import ProductCard from './ProductCard'
 import './Products.css'
 
@@ -272,6 +273,7 @@ function Products() {
   const { config } = useTheme()
   const { currency } = usePreferences()
   const { locale } = useLocale()
+  const { t } = useTranslation()
   const [currentPage, setCurrentPage] = useState(1)
   const [searchTerm, setSearchTerm] = useState('')
   const productsPerPage = 8
@@ -308,7 +310,7 @@ function Products() {
       category: product.category
     })
     if (existingItem) {
-      toast.success(`Added another ${product.name} to cart!`, {
+      toast.success(t('products_addedAnother', { name: product.name }), {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -317,7 +319,7 @@ function Products() {
         draggable: true,
       })
     } else {
-      toast.success(`${product.name} added to cart! 🛒`, {
+      toast.success(`${t('products_addedToCart', { name: product.name })} 🛒`, {
         position: "top-right",
         autoClose: 2000,
         hideProgressBar: false,
@@ -368,18 +370,18 @@ function Products() {
     <div className="products-page">
       <div className="products-container">
         <div className="products-header">
-          <h1>🛍️ Our Products</h1>
-          <p>Discover amazing products at great prices</p>
+          <h1>🛍️ {t('products_title')}</h1>
+          <p>{t('products_subtitle')}</p>
           <input
             type="text"
-            placeholder="Search on this page..."
+            placeholder={t('products_searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="products-search"
             style={{ marginBottom: '12px', padding: '8px 12px', width: '260px', borderRadius: '8px', border: '1px solid #ddd' }}
           />
           <div className="products-count">
-            Showing {startIndex + 1}-{Math.min(endIndex, products.length)} of {products.length} products · Theme: {config.label} · {currency} · {locale}
+            {t('products_showing', { start: startIndex + 1, end: Math.min(endIndex, products.length), total: products.length })} · Theme: {config.label} · {currency} · {locale}
           </div>
         </div>
 
@@ -393,7 +395,6 @@ function Products() {
           ))}
         </div>
 
-        {/* Pagination */}
         {totalPages > 1 && (
           <div className="pagination">
             <button
@@ -402,7 +403,7 @@ function Products() {
               disabled={currentPage === 1}
             >
               <FaChevronLeft size={16} />
-              Previous
+              {t('products_previous')}
             </button>
             
             <div className="pagination-numbers">
@@ -426,7 +427,7 @@ function Products() {
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
             >
-              Next
+              {t('products_next')}
               <FaChevronRight size={16} />
             </button>
           </div>

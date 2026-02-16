@@ -4,15 +4,17 @@ import { toast } from 'react-toastify'
 import { useCart } from '../hooks/useCart'
 import { useAuth } from '../context/AuthContext'
 import { useApi } from '../context/ApiContext'
+import { useTranslation } from '../hooks/useTranslation'
 import ProductCard from './ProductCard'
 import './HomePage.css'
 
 function UserGreeting() {
   const { user } = useAuth()
+  const { t } = useTranslation()
   if (!user) return null
   return (
     <p className="hero-promo" style={{ marginTop: '8px', fontSize: '14px', opacity: 0.9 }}>
-      Welcome back, {user.name}!
+      {t('home_welcomeBack', { name: user.name })}
     </p>
   )
 }
@@ -55,6 +57,7 @@ const featuredProducts = [
 function HomePage() {
   const { cartItems, addToCart } = useCart()
   const { baseUrl } = useApi()
+  const { t } = useTranslation()
   const [promoMessage, setPromoMessage] = useState(null)
 
   useEffect(() => {
@@ -98,37 +101,38 @@ function HomePage() {
       category: product.category
     })
     if (existingItem) {
-      toast.success(`Added another ${product.name} to cart!`, {
+      toast.success(t('products_addedAnother', { name: product.name }), {
         position: "top-right",
         autoClose: 2000,
       })
     } else {
-      toast.success(`${product.name} added to cart! 🛒`, {
+      toast.success(`${t('products_addedToCart', { name: product.name })} 🛒`, {
         position: "top-right",
         autoClose: 2000,
       })
     }
   }
 
+  const cartCount = cartItems.length
+  const cartTotal = cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)
+
   return (
     <div className="homepage">
-      {/* Hero Banner */}
       <div className="hero-banner">
         <div className="hero-content">
-          <h1 className="hero-title">Welcome to Savyre Shop</h1>
-          <p className="hero-subtitle">Discover amazing products at unbeatable prices</p>
+          <h1 className="hero-title">{t('home_heroTitle')}</h1>
+          <p className="hero-subtitle">{t('home_heroSubtitle')}</p>
           <UserGreeting />
           <Link to="/products" className="hero-cta-button">
-            Shop Now
+            {t('home_shopNow')}
           </Link>
         </div>
       </div>
 
-      {/* Featured Products Section */}
       <div className="featured-section">
         <div className="section-header">
-          <h2>Featured Products</h2>
-          <Link to="/products" className="view-all-link">View All Products →</Link>
+          <h2>{t('home_featuredProducts')}</h2>
+          <Link to="/products" className="view-all-link">{t('home_viewAll')}</Link>
         </div>
         <div className="products-grid">
           {featuredProducts.map(product => (
@@ -141,19 +145,20 @@ function HomePage() {
         </div>
       </div>
 
-      {/* Cart Summary Banner */}
       {cartItems.length > 0 && (
         <div className="cart-summary-banner">
           <div className="cart-summary-content">
             <div className="cart-summary-info">
               <span className="cart-icon">🛒</span>
               <div>
-                <p className="cart-items-count">{cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} in your cart</p>
-                <p className="cart-total">Total: ${cartItems.reduce((total, item) => total + (item.price * item.quantity), 0).toFixed(2)}</p>
+                <p className="cart-items-count">
+                  {cartCount} {cartCount === 1 ? t('cart_item') : t('cart_items')} in your cart
+                </p>
+                <p className="cart-total">{t('home_total')}: ${cartTotal}</p>
               </div>
             </div>
             <Link to="/cart" className="view-cart-button">
-              View Cart
+              {t('home_viewCart')}
             </Link>
           </div>
         </div>

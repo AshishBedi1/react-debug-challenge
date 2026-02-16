@@ -1,17 +1,19 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSettings } from '../../context/SettingsContext'
+import { useTranslation } from '../../hooks/useTranslation'
 
 function GeneralSettings({ onSave }) {
-  const { settings } = useSettings()
-  const [language, setLanguage] = useState(settings.language || 'en')
-  const [autoSave, setAutoSave] = useState(settings.autoSave ?? true)
+  const { settings, setSettings } = useSettings()
+  const { t } = useTranslation()
   const [preferences, setPreferences] = useState({ fontSize: 14, compact: false })
 
-  // Sync with context when it changes
-  useEffect(() => {
-    setLanguage(settings.language || 'en')
-    setAutoSave(settings.autoSave ?? true)
-  }, [settings.language, settings.autoSave])
+  const handleLanguageChange = (e) => {
+    setSettings({ language: e.target.value })
+  }
+
+  const handleAutoSaveToggle = () => {
+    setSettings({ autoSave: !settings.autoSave })
+  }
 
   const handleFontSizeChange = (size) => {
     setPreferences((prev) => ({ ...prev, fontSize: size }))
@@ -19,31 +21,31 @@ function GeneralSettings({ onSave }) {
 
   return (
     <div className="settings-section">
-      <h3>General</h3>
+      <h3>{t('settings_general')}</h3>
 
       <div className="setting-item">
-        <label>Language</label>
-        <select value={language} onChange={(e) => setLanguage(e.target.value)}>
+        <label>{t('settings_language')}</label>
+        <select value={settings.language} onChange={handleLanguageChange}>
           <option value="en">English</option>
-          <option value="es">Spanish</option>
-          <option value="fr">French</option>
-          <option value="de">German</option>
-          <option value="ja">Japanese</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="de">Deutsch</option>
+          <option value="ja">日本語</option>
         </select>
       </div>
 
       <div className="setting-item">
-        <label>Auto-Save</label>
+        <label>{t('settings_autoSave')}</label>
         <button
-          className={`toggle-switch ${autoSave ? 'on' : 'off'}`}
-          onClick={() => setAutoSave(!autoSave)}
+          className={`toggle-switch ${settings.autoSave ? 'on' : 'off'}`}
+          onClick={handleAutoSaveToggle}
         >
-          {autoSave ? 'ON' : 'OFF'}
+          {settings.autoSave ? 'ON' : 'OFF'}
         </button>
       </div>
 
       <div className="setting-item">
-        <label>Font Size: {preferences.fontSize}px</label>
+        <label>{t('settings_fontSize')}: {preferences.fontSize}px</label>
         <input
           type="range"
           min={10}
@@ -53,8 +55,8 @@ function GeneralSettings({ onSave }) {
         />
       </div>
 
-      <button className="save-section-btn" onClick={() => onSave({ language, autoSave })}>
-        Save General Settings
+      <button className="save-section-btn" onClick={() => onSave({ language: settings.language, autoSave: settings.autoSave })}>
+        {t('settings_saveGeneral')}
       </button>
     </div>
   )

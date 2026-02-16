@@ -1,6 +1,8 @@
+import { useTranslation } from '../hooks/useTranslation'
 import './ProductCard.css'
 
 function ProductCard({ product, onAddToCart }) {
+  const { t } = useTranslation()
   const handleAdd = () => onAddToCart(product)
 
   return (
@@ -18,7 +20,7 @@ function ProductCard({ product, onAddToCart }) {
         <button
           className="quick-add-btn"
           onClick={handleAdd}
-          title="Add to cart"
+          title={t('products_addToCart')}
         >
           🛒
         </button>
@@ -29,7 +31,7 @@ function ProductCard({ product, onAddToCart }) {
         <div className="product-footer">
           <span className="product-price">${product.price.toFixed(2)}</span>
           <button className="btn-add-to-cart" onClick={handleAdd}>
-            Add to Cart
+            {t('products_addToCart')}
           </button>
         </div>
       </div>

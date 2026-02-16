@@ -11,6 +11,7 @@ import {
   FaClipboardList,
 } from 'react-icons/fa'
 import { useTodos } from '../hooks/useTodos'
+import { useTranslation } from '../hooks/useTranslation'
 import './TodoManager.css'
 
 function TodoManager() {
@@ -26,6 +27,7 @@ function TodoManager() {
     setEditingId,
     clearCompleted,
   } = useTodos()
+  const { t } = useTranslation()
   const [todoInput, setTodoInput] = useState('')
   const [editValue, setEditValue] = useState('')
   const todoInputRef = useRef(null)
@@ -105,19 +107,18 @@ function TodoManager() {
 
   return (
     <div className="todo-manager">
-      {/* Left Sidebar */}
       <aside className="todo-sidebar">
         <div className="sidebar-header">
           <div className="logo-section">
             <div className="logo-icon">✓</div>
-            <h2>Tasks</h2>
+            <h2>{t('todos_title')}</h2>
           </div>
           <button 
             className="new-task-btn"
             onClick={focusTodoInput}
           >
             <FaPlus size={16} />
-            New Task
+            {t('todos_newTask')}
           </button>
         </div>
         
@@ -127,7 +128,7 @@ function TodoManager() {
             className={`sidebar-filter ${filter === 'all' ? 'active' : ''}`}
           >
             <FaStar size={18} />
-            <span>All Tasks</span>
+            <span>{t('todos_allTasks')}</span>
             <span className="filter-count">{todos.length}</span>
           </button>
           <button
@@ -135,7 +136,7 @@ function TodoManager() {
             className={`sidebar-filter ${filter === 'active' ? 'active' : ''}`}
           >
             <FaRegCircle size={18} />
-            <span>Active</span>
+            <span>{t('todos_active')}</span>
             <span className="filter-count">{activeTodoCount}</span>
           </button>
           <button
@@ -143,15 +144,14 @@ function TodoManager() {
             className={`sidebar-filter ${filter === 'completed' ? 'active' : ''}`}
           >
             <FaCheck size={18} />
-            <span>Completed</span>
+            <span>{t('todos_completed')}</span>
             <span className="filter-count">{completedTodoCount}</span>
           </button>
         </div>
 
-        {/* Progress Section */}
         <div className="progress-section">
           <div className="progress-header">
-            <span className="progress-label">Progress</span>
+            <span className="progress-label">{t('todos_progress')}</span>
             <span className="progress-percentage">{completionRate}%</span>
           </div>
           <div className="progress-bar">
@@ -166,14 +166,14 @@ function TodoManager() {
           <div className="sidebar-actions">
             <button onClick={handleClearCompleted} className="clear-completed-btn">
               <FaTimes size={16} />
-              Clear Completed
+              {t('todos_clearCompleted')}
             </button>
           </div>
         )}
 
         {lastUpdated && (
           <div className="sidebar-meta" style={{ fontSize: '11px', color: 'var(--text-muted)', marginBottom: '8px' }}>
-            UI refreshed: {new Date(lastUpdated).toLocaleTimeString()}
+            {t('todos_uiRefreshed')}: {new Date(lastUpdated).toLocaleTimeString()}
           </div>
         )}
         <div className="sidebar-stats">
@@ -181,46 +181,45 @@ function TodoManager() {
             <div className="stat-icon total">📋</div>
             <div className="stat-info">
               <span className="stat-value">{todos.length}</span>
-              <span className="stat-label">Total Tasks</span>
+              <span className="stat-label">{t('todos_totalTasks')}</span>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon active">✏️</div>
             <div className="stat-info">
               <span className="stat-value">{draftsOpenedCount}</span>
-              <span className="stat-label">Drafts opened</span>
+              <span className="stat-label">{t('todos_draftsOpened')}</span>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon active">⚡</div>
             <div className="stat-info">
               <span className="stat-value">{activeTodoCount}</span>
-              <span className="stat-label">Active</span>
+              <span className="stat-label">{t('todos_activeTasks')}</span>
             </div>
           </div>
           <div className="stat-card">
             <div className="stat-icon completed">✅</div>
             <div className="stat-info">
               <span className="stat-value">{completedTodoCount}</span>
-              <span className="stat-label">Completed</span>
+              <span className="stat-label">{t('todos_completedTasks')}</span>
             </div>
           </div>
         </div>
       </aside>
 
-      {/* Main Content Area */}
       <main className="todo-main">
         <div className="todo-header">
           <div>
             <h1>
-              {filter === 'all' && 'All Tasks'}
-              {filter === 'active' && 'Active Tasks'}
-              {filter === 'completed' && 'Completed Tasks'}
+              {filter === 'all' && t('todos_allTasks')}
+              {filter === 'active' && `${t('todos_active')} ${t('todos_title')}`}
+              {filter === 'completed' && `${t('todos_completed')} ${t('todos_title')}`}
             </h1>
             <p className="todo-subtitle">
-              {filter === 'all' && `${todos.length} tasks in total`}
-              {filter === 'active' && `${activeTodoCount} tasks to complete`}
-              {filter === 'completed' && `${completedTodoCount} tasks completed`}
+              {filter === 'all' && t('todos_tasksInTotal', { count: todos.length })}
+              {filter === 'active' && t('todos_tasksToComplete', { count: activeTodoCount })}
+              {filter === 'completed' && t('todos_tasksCompleted', { count: completedTodoCount })}
             </p>
           </div>
         </div>
@@ -231,10 +230,10 @@ function TodoManager() {
               <div className="empty-illustration">
                 <FaClipboardList size={120} style={{ color: '#e5e7eb' }} aria-hidden />
               </div>
-              <h2>No tasks found</h2>
+              <h2>{t('todos_noTasksFound')}</h2>
               <p>{todos.length === 0 
-                ? 'Create your first task to get started'
-                : `No ${filter} tasks available.`
+                ? t('todos_createFirst')
+                : t('todos_noFilter', { filter })
               }</p>
             </div>
           ) : (
@@ -259,10 +258,10 @@ function TodoManager() {
                         autoFocus
                       />
                       <div className="edit-actions">
-                        <button onClick={() => handleSaveEdit(todo.id)} className="action-btn save-btn" title="Save">
+                        <button onClick={() => handleSaveEdit(todo.id)} className="action-btn save-btn" title={t('todos_save')}>
                           <FaCheck size={16} />
                         </button>
-                        <button onClick={handleCancelEdit} className="action-btn cancel-btn" title="Cancel">
+                        <button onClick={handleCancelEdit} className="action-btn cancel-btn" title={t('todos_cancel')}>
                           <FaTimes size={16} />
                         </button>
                       </div>
@@ -298,14 +297,14 @@ function TodoManager() {
                         <button 
                           onClick={() => handleStartEdit(todo.id, todo.text)} 
                           className="action-btn edit-btn"
-                          title="Edit task"
+                          title={t('todos_editTask')}
                         >
                           <FaPen size={16} />
                         </button>
                         <button 
                           onClick={() => handleDeleteTodo(todo.id)} 
                           className="action-btn delete-btn"
-                          title="Delete task"
+                          title={t('todos_deleteTask')}
                         >
                           <FaTimes size={16} />
                         </button>
@@ -318,7 +317,6 @@ function TodoManager() {
           )}
         </div>
 
-        {/* Input Area */}
         <div className="todo-input-container">
           <form onSubmit={handleAddTodo} className="todo-input-form">
             <div className="input-wrapper">
@@ -330,14 +328,14 @@ function TodoManager() {
                 type="text"
                 value={todoInput}
                 onChange={(e) => setTodoInput(e.target.value)}
-                placeholder="Add a new task..."
+                placeholder={t('todos_addPlaceholder')}
                 className="todo-input"
               />
               <button 
                 type="submit" 
                 className="send-button"
                 disabled={!todoInput.trim()}
-                title="Add task"
+                title={t('todos_newTask')}
               >
                 <FaPaperPlane size={18} />
               </button>

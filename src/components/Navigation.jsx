@@ -7,28 +7,30 @@ import {
 } from 'react-icons/fa'
 import { useTheme } from '../context/ThemeContext'
 import { useAuth } from '../context/AuthContext'
+import { useTranslation } from '../hooks/useTranslation'
 import './Navigation.css'
 
 const navLinks = [
-  { path: '/', label: 'Home', icon: FaHome },
-  { path: '/dashboard', label: 'Dashboard', icon: FaChartBar },
-  { path: '/products', label: 'Shop', icon: FaShoppingBag },
-  { path: '/users', label: 'Users', icon: FaUsers },
-  { path: '/todos', label: 'Tasks', icon: FaTasks },
-  { path: '/task-board', label: 'Task Board', icon: FaColumns },
-  { path: '/blog', label: 'Blog', icon: FaBlog },
-  { path: '/news', label: 'News', icon: FaNewspaper },
-  { path: '/data-explorer', label: 'Explorer', icon: FaDatabase },
-  { path: '/compare', label: 'Compare', icon: FaBalanceScale },
-  { path: '/register', label: 'Register', icon: FaClipboardList },
-  { path: '/settings', label: 'Settings', icon: FaCog },
-  { path: '/contact', label: 'Contact', icon: FaEnvelope },
+  { path: '/', labelKey: 'nav_home', icon: FaHome },
+  { path: '/dashboard', labelKey: 'nav_dashboard', icon: FaChartBar },
+  { path: '/products', labelKey: 'nav_shop', icon: FaShoppingBag },
+  { path: '/users', labelKey: 'nav_users', icon: FaUsers },
+  { path: '/todos', labelKey: 'nav_tasks', icon: FaTasks },
+  { path: '/task-board', labelKey: 'nav_taskBoard', icon: FaColumns },
+  { path: '/blog', labelKey: 'nav_blog', icon: FaBlog },
+  { path: '/news', labelKey: 'nav_news', icon: FaNewspaper },
+  { path: '/data-explorer', labelKey: 'nav_explorer', icon: FaDatabase },
+  { path: '/compare', labelKey: 'nav_compare', icon: FaBalanceScale },
+  { path: '/register', labelKey: 'nav_register', icon: FaClipboardList },
+  { path: '/settings', labelKey: 'nav_settings', icon: FaCog },
+  { path: '/contact', labelKey: 'nav_contact', icon: FaEnvelope },
 ]
 
 function Navigation() {
   const location = useLocation()
   const { toggleTheme, isDark, themeLabel } = useTheme()
   const { userDisplayName } = useAuth()
+  const { t } = useTranslation()
   const cartItems = useSelector((state) => state.cart.items)
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0)
 
@@ -45,7 +47,7 @@ function Navigation() {
             className={`navbar-link cart-link ${location.pathname === '/cart' ? 'active' : ''}`}
           >
             <span className="navbar-icon"><FaShoppingCart size={18} /></span>
-            <span>Cart</span>
+            <span>{t('nav_cart')}</span>
             {cartItemCount > 0 && (
               <span className="cart-badge">{cartItemCount}</span>
             )}
@@ -73,7 +75,7 @@ function Navigation() {
                 className={`navbar-link ${location.pathname === link.path ? 'active' : ''}`}
               >
                 <Icon size={14} />
-                <span>{link.label}</span>
+                <span>{t(link.labelKey)}</span>
               </Link>
             )
           })}

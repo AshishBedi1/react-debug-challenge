@@ -1,7 +1,9 @@
 import { useSettings } from '../../context/SettingsContext'
+import { useTranslation } from '../../hooks/useTranslation'
 
 function NotificationSettings() {
   const { settings, setSettings } = useSettings()
+  const { t } = useTranslation()
 
   const handleToggleEmail = () => {
     setSettings({ emailNotifications: !settings.emailNotifications })
@@ -13,10 +15,10 @@ function NotificationSettings() {
 
   return (
     <div className="settings-section">
-      <h3>Notifications</h3>
+      <h3>{t('settings_notifications')}</h3>
 
       <div className="setting-item">
-        <label>Email Notifications</label>
+        <label>{t('settings_emailNotifications')}</label>
         <button
           className={`toggle-switch ${settings.emailNotifications ? 'on' : 'off'}`}
           onClick={handleToggleEmail}
@@ -26,7 +28,7 @@ function NotificationSettings() {
       </div>
 
       <div className="setting-item">
-        <label>Push Notifications</label>
+        <label>{t('settings_pushNotifications')}</label>
         <button
           className={`toggle-switch ${settings.pushNotifications ? 'on' : 'off'}`}
           onClick={handleTogglePush}
@@ -36,12 +38,12 @@ function NotificationSettings() {
       </div>
 
       <div className="setting-item">
-        <label>Digest Frequency</label>
+        <label>{t('settings_digestFrequency')}</label>
         <select defaultValue="daily">
-          <option value="realtime">Real-time</option>
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="never">Never</option>
+          <option value="realtime">{t('settings_realtime')}</option>
+          <option value="daily">{t('settings_daily')}</option>
+          <option value="weekly">{t('settings_weekly')}</option>
+          <option value="never">{t('settings_never')}</option>
         </select>
       </div>
     </div>

@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useTheme } from '../context/ThemeContext'
-import { SettingsProvider, useSettings } from '../context/SettingsContext'
+import { useSettings } from '../context/SettingsContext'
 import { useSyncedState } from '../hooks/useSyncedState'
 import { useEventListener } from '../hooks/useEventListener'
+import { useTranslation } from '../hooks/useTranslation'
 import GeneralSettings from './settings/GeneralSettings'
 import NotificationSettings from './settings/NotificationSettings'
 import PrivacySettings from './settings/PrivacySettings'
@@ -13,6 +14,7 @@ import './SettingsPanel.css'
 function SettingsPanelInner() {
   const { theme } = useTheme()
   const { settings, setSettings } = useSettings()
+  const { t } = useTranslation()
   const [activeTab, setActiveTab] = useState('general')
   const [saveStatus, setSaveStatus] = useState(null)
   const [lastSaved, setLastSaved] = useState(null)
@@ -20,7 +22,6 @@ function SettingsPanelInner() {
 
   const [savedPrefs, setSavedPrefs] = useSyncedState('userSettings', settings)
 
-  // Keyboard shortcut: Ctrl+S triggers save
   useEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
       e.preventDefault()
@@ -28,7 +29,6 @@ function SettingsPanelInner() {
     }
   })
 
-  // Listen for cross-tab storage changes
   useEffect(() => {
     const handler = (e) => {
       if (e.key === 'userSettings' && e.newValue) {
@@ -45,25 +45,22 @@ function SettingsPanelInner() {
   }, [setSettings])
 
   const handleSave = useCallback((sectionData) => {
-    setSaveStatus('Saving...')
+    setSaveStatus(t('settings_saving'))
 
-    // Clean up previous auto-save timer
     if (autoSaveTimerRef.current) {
       clearTimeout(autoSaveTimerRef.current)
     }
 
-    // Simulate API call
     const timer = setTimeout(() => {
       setSettings((prev) => ({ ...prev, ...sectionData, saved: true }))
       setSavedPrefs((prev) => ({ ...prev, ...sectionData }))
-      setSaveStatus('Saved!')
+      setSaveStatus(t('settings_saved'))
       setLastSaved(new Date().toLocaleTimeString())
     }, 1000)
 
     autoSaveTimerRef.current = timer
-  }, [setSettings, setSavedPrefs])
+  }, [setSettings, setSavedPrefs, t])
 
-  // Clean up timer on unmount
   useEffect(() => {
     return () => {
       if (autoSaveTimerRef.current) {
@@ -74,8 +71,8 @@ function SettingsPanelInner() {
 
   const handleQuickToggle = useCallback((key) => {
     setSettings((prev) => ({ ...prev, [key]: !prev[key] }))
-    setSaveStatus(`${key} updated`)
-  }, [setSettings])
+    setSaveStatus(t('settings_updated', { key }))
+  }, [setSettings, t])
 
   const [count, setCount] = useState(0)
 
@@ -83,31 +80,37 @@ function SettingsPanelInner() {
     setCount((prev) => prev + 1)
   }
 
+  const tabKeys = ['general', 'notifications', 'privacy']
+  const tabLabels = {
+    general: t('settings_general'),
+    notifications: t('settings_notifications'),
+    privacy: t('settings_privacy'),
+  }
+
   return (
     <div className={`settings-panel ${theme}`}>
       <div className="settings-header">
-        <h1>Settings</h1>
-        <p className="settings-subtitle">Manage your account preferences</p>
+        <h1>{t('settings_title')}</h1>
+        <p className="settings-subtitle">{t('settings_subtitle')}</p>
         {saveStatus && <span className="save-status">{saveStatus}</span>}
-        {lastSaved && <span className="last-saved">Last saved: {lastSaved}</span>}
+        {lastSaved && <span className="last-saved">{t('settings_lastSaved')}: {lastSaved}</span>}
       </div>
 
       <div className="settings-layout">
         <div className="settings-tabs">
-          {['general', 'notifications', 'privacy'].map((tab) => (
+          {tabKeys.map((tab) => (
             <button
               key={tab}
               className={`settings-tab ${activeTab === tab ? 'active' : ''}`}
               onClick={() => setActiveTab(tab)}
             >
-              {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              {tabLabels[tab]}
             </button>
           ))}
         </div>
 
         <div className="settings-body">
           <div className="settings-main">
-            {/* Each settings section is wrapped with an error boundary */}
             <ErrorBoundary>
               {activeTab === 'general' && (
                 <GeneralSettings onSave={handleSave} />
@@ -118,11 +121,10 @@ function SettingsPanelInner() {
               {activeTab === 'privacy' && <PrivacySettings />}
             </ErrorBoundary>
 
-            {/* Quick toggles */}
             <div className="settings-section">
-              <h3>Quick Toggles</h3>
+              <h3>{t('settings_quickToggles')}</h3>
               <div className="setting-item">
-                <label>Email Notifications</label>
+                <label>{t('settings_emailNotifications')}</label>
                 <button
                   className={`toggle-switch ${settings.emailNotifications ? 'on' : 'off'}`}
                   onClick={() => handleQuickToggle('emailNotifications')}
@@ -131,7 +133,7 @@ function SettingsPanelInner() {
                 </button>
               </div>
               <div className="setting-item">
-                <label>Auto-Save</label>
+                <label>{t('settings_autoSave')}</label>
                 <button
                   className={`toggle-switch ${settings.autoSave ? 'on' : 'off'}`}
                   onClick={() => handleQuickToggle('autoSave')}
@@ -141,14 +143,13 @@ function SettingsPanelInner() {
               </div>
             </div>
 
-            {/* Save counter */}
             <div className="settings-section">
-              <h3>Save Counter</h3>
+              <h3>{t('settings_saveCounter')}</h3>
               <p className="batch-info">
-                Count: {count}
+                {t('settings_count')}: {count}
               </p>
               <button className="save-section-btn" onClick={handleBatchExample}>
-                Increment
+                {t('settings_increment')}
               </button>
             </div>
           </div>
@@ -162,12 +163,4 @@ function SettingsPanelInner() {
   )
 }
 
-function SettingsPanel() {
-  return (
-    <SettingsProvider>
-      <SettingsPanelInner />
-    </SettingsProvider>
-  )
-}
-
-export default SettingsPanel
+export default SettingsPanelInner
