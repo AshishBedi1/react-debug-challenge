@@ -83,15 +83,64 @@
 
 /* ── Sections ── */
 
+.dashboard-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
 .dashboard-section {
   margin-bottom: 2.5rem;
+}
+
+.draggable-section {
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 2px solid transparent;
+  transition: border-color 0.2s, opacity 0.2s, box-shadow 0.2s;
+  cursor: grab;
+}
+
+.draggable-section:hover {
+  border-color: #e5e7eb;
+}
+
+.draggable-section.dragging {
+  opacity: 0.4;
+  border-color: #600EE4;
+  box-shadow: 0 4px 20px rgba(96, 14, 228, 0.15);
+}
+
+.draggable-section.drag-over {
+  border-color: #600EE4;
+  background: rgba(96, 14, 228, 0.03);
+}
+
+.section-drag-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
+}
+
+.drag-handle {
+  font-size: 1.3rem;
+  color: #9ca3af;
+  cursor: grab;
+  user-select: none;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.drag-handle:hover {
+  color: #600EE4;
 }
 
 .section-title {
   font-size: 1.35rem;
   font-weight: 700;
   color: #1a1a2e;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 /* ── Stats Grid ── */
@@ -519,6 +568,26 @@
   border-bottom-color: rgba(255, 255, 255, 0.08);
 }
 
+.dashboard-builder.dark .draggable-section:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dashboard-builder.dark .draggable-section.dragging {
+  border-color: #600EE4;
+}
+
+.dashboard-builder.dark .draggable-section.drag-over {
+  background: rgba(96, 14, 228, 0.06);
+}
+
+.dashboard-builder.dark .drag-handle {
+  color: #6b7280;
+}
+
+.dashboard-builder.dark .drag-handle:hover {
+  color: #a78bfa;
+}
+
 @media (max-width: 768px) {
   .dashboard-builder {
     padding: 1rem;
@@ -535,4 +604,47 @@
   .stats-grid.grid {
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
+}
+
+/* Loading State */
+.dashboard-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 0;
+  color: #6b7280;
+}
+
+.dashboard-spinner {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #e5e7eb;
+  border-top-color: #600EE4;
+  border-radius: 50%;
+  animation: dashboard-spin 0.8s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes dashboard-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.dashboard-loading p {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+/* Error State */
+.dashboard-error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 0;
+  color: #dc2626;
+  font-size: 1rem;
+  font-weight: 500;
 }

@@ -1,0 +1,9 @@
+{
+  "description": "The dashboard sections are supposed to be reorderable via drag-and-drop, but dragging a section and dropping it on another position does nothing. The sections stay in their original order no matter how many times you try.",
+  "expectedOutcome": "Dragging a dashboard section (e.g. 'Key Metrics') and dropping it onto another section (e.g. 'Recent Activity') should reorder them — the dropped section should appear at the new position.",
+  "hint": "Look at the drag-and-drop event handlers in DashboardBuilder.jsx — check what handleDragOver does (or doesn't do), and how the sections array is being updated in handleDrop.",
+  "bugFilePath": "src/components/DashboardBuilder.jsx",
+  "difficulty": "Easy",
+  "solution": "There are two bugs in src/components/DashboardBuilder.jsx:\n\nBug 1 — Line 102-103 (handleDragOver is empty):\nThe handleDragOver function body is empty. The HTML5 Drag and Drop API requires e.preventDefault() to be called on the 'dragover' event for an element to become a valid drop target. Without it, the browser blocks the drop and the onDrop handler never fires.\n\nFix: Add e.preventDefault() inside handleDragOver on line 103.\n\nBug 2 — Line 109 (direct state mutation in handleDrop):\n'const reordered = sections' copies the array reference, not the array itself. The .splice() calls on lines 110-111 mutate the original state array in place. When setSections(reordered) is called on line 112, React sees the same object reference and skips the re-render.\n\nFix: Change line 109 from 'const reordered = sections' to 'const reordered = [...sections]' to create a shallow clone before mutating.",
+  "solutionCode": "// Line 102-103: Fix handleDragOver — add e.preventDefault()\nconst handleDragOver = (e) => {\n  e.preventDefault();\n};\n\n// Line 109: Fix handleDrop — clone the array instead of referencing it\nconst reordered = [...sections];"
+}
