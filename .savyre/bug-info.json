@@ -1,0 +1,9 @@
+{
+  "description": "The Contact form fields reset when typing in a different field. Filling in Name and then moving to Email causes the Name field to clear, making it impossible to complete and submit the form.",
+  "expectedOutcome": "Typing in one field should not clear the values of other fields. All form fields should retain their values independently so the user can fill out and submit the complete form.",
+  "hint": "Look at how setForm is called inside handleChange — is the previous state being preserved?",
+  "difficulty": "Easy",
+  "bugFilePath": "src/components/Contact.jsx",
+  "solution": "Replace the object literal in setForm with a functional updater that spreads the previous state. The current handleChange creates a new object with all fields set to empty strings before overwriting the active field, so every keystroke wipes the other fields. Using the functional updater with spread preserves existing values.",
+  "solutionCode": "const handleChange = (e) => {\n  const { name, value } = e.target;\n  setForm((prev) => ({ ...prev, [name]: value }));\n};"
+}

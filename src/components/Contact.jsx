@@ -27,10 +27,8 @@ function Contact() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
-    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }))
+    setForm({ name: '', email: '', subject: '', message: '', [name]: value })
   }
-
   const handleSubmit = (e) => {
     e.preventDefault()
     if (!validate()) return
