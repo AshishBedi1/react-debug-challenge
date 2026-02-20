@@ -45,25 +45,22 @@ function generateUsers(count) {
   return users
 }
 
-const allUsers = generateUsers(500)
-
 function UserDirectory() {
   const { theme } = useTheme()
+  const [users, setUsers] = useState(() => generateUsers(500))
   const [searchTerm, setSearchTerm] = useState('')
   const [roleFilter, setRoleFilter] = useState('all')
   const [sortBy, setSortBy] = useState('name')
   const [selectedUser, setSelectedUser] = useState(null)
   const [sidebarOpen, setSidebarOpen] = useState(true)
 
-  // Debounce search to avoid filtering 500 users on every keystroke
   const debouncedSearch = useDebounce(searchTerm, 300)
 
-  // Responsive layout info
   const { width } = useWindowSize()
   const gridColumns = width > 1200 ? 4 : width > 900 ? 3 : width > 600 ? 2 : 1
 
   const filteredUsers = useMemo(() => {
-    return allUsers
+    return users
       .filter((user) => {
         const matchesSearch =
           user.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
@@ -77,13 +74,23 @@ function UserDirectory() {
         if (sortBy === 'tasks') return b.tasks - a.tasks
         return 0
       })
-  }, [debouncedSearch, roleFilter, sortBy])
+  }, [users, debouncedSearch, roleFilter, sortBy])
 
-  const onlineCount = useMemo(() => allUsers.filter((u) => u.isOnline).length, [])
+  const onlineCount = useMemo(() => users.filter((u) => u.isOnline).length, [users])
+
+  const refreshActivity = useCallback(() => {
+    setUsers(prev => prev.map(user => ({
+      ...user,
+      isOnline: Math.random() > 0.5,
+      projects: Math.floor(Math.random() * 20) + 1,
+      tasks: Math.floor(Math.random() * 50) + 5,
+      completedTasks: Math.floor(Math.random() * 40),
+    })))
+  }, [])
 
   const handleSelect = useCallback((userId) => {
-    setSelectedUser(allUsers.find((u) => u.id === userId) || null)
-  }, [])
+    setSelectedUser(users.find((u) => u.id === userId) || null)
+  }, [users])
 
   const handleClose = useCallback(() => setSelectedUser(null), [])
 
@@ -96,7 +103,7 @@ function UserDirectory() {
           <p className="user-dir-subtitle">Manage and browse your team members</p>
         </div>
         <UserStatsPanel
-          totalUsers={allUsers.length}
+          totalUsers={users.length}
           onlineUsers={onlineCount}
           roles={roles}
         />
@@ -132,6 +139,12 @@ function UserDirectory() {
           <option value="projects">Sort by Projects</option>
           <option value="tasks">Sort by Tasks</option>
         </select>
+        <button
+          className="sidebar-toggle-btn"
+          onClick={refreshActivity}
+        >
+          Refresh Activity
+        </button>
         <button
           className="sidebar-toggle-btn"
           onClick={() => setSidebarOpen(!sidebarOpen)}

@@ -1,0 +1,9 @@
+{
+  "description": "On the User Directory page, clicking the 'Refresh Activity' button updates the online count in the header stats panel, but the individual user cards do not reflect the updated online status, project count, or task count. The cards remain stale despite the data clearly changing.",
+  "expectedOutcome": "When clicking 'Refresh Activity', all user cards should immediately update to show the new online/offline status indicators, project counts, and task counts — consistent with the updated stats shown in the header panel.",
+  "hint": "Compare what the custom equality check is verifying against what the component actually renders. Are all rendered fields accounted for?",
+  "difficulty": "Medium",
+  "bugFilePath": "src/components/UserCard.jsx",
+  "solution": "The React.memo custom comparison function in UserCard.jsx (lines 32-39) only checks static identity fields (id, name, email, role) that never change. It omits the dynamic fields the component renders: isOnline, projects, and tasks. Because the comparator returns true (props are equal) for every refresh, React skips re-rendering the cards even though the underlying data has changed. The fix is to add the missing dynamic fields to the comparator so React.memo correctly detects when a re-render is needed.",
+  "solutionCode": "}, (prevProps, nextProps) => {\n  return (\n    prevProps.user.id === nextProps.user.id &&\n    prevProps.user.name === nextProps.user.name &&\n    prevProps.user.email === nextProps.user.email &&\n    prevProps.user.role === nextProps.user.role &&\n    prevProps.user.isOnline === nextProps.user.isOnline &&\n    prevProps.user.projects === nextProps.user.projects &&\n    prevProps.user.tasks === nextProps.user.tasks &&\n    prevProps.onClick === nextProps.onClick\n  )\n})"
+}

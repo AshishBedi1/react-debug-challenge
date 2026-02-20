@@ -33,10 +33,8 @@ const UserCard = React.memo(function UserCard({ user, onClick }) {
   return (
     prevProps.user.id === nextProps.user.id &&
     prevProps.user.name === nextProps.user.name &&
-    prevProps.user.isOnline === nextProps.user.isOnline &&
-    prevProps.user.projects === nextProps.user.projects &&
-    prevProps.user.tasks === nextProps.user.tasks &&
-    prevProps.onClick === nextProps.onClick
+    prevProps.user.email === nextProps.user.email &&
+    prevProps.user.role === nextProps.user.role
   )
 })
 
