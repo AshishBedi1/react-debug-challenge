@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import TaskCard from './TaskCard'
 
 const Column = React.memo(function Column({ title, tasks, status, onTaskMove, onTaskEdit }) {
@@ -7,6 +7,14 @@ const Column = React.memo(function Column({ title, tasks, status, onTaskMove, on
     'in-progress': '#600EE4',
     done: '#22c55e',
   }
+
+  const handleMove = useCallback((taskId) => {
+    onTaskMove({ taskId, fromStatus: status })
+  }, [onTaskMove, status])
+
+  const handleEdit = useCallback((task) => {
+    onTaskEdit(task.id)
+  }, [onTaskEdit])
 
   return (
     <div className="board-column">
@@ -19,8 +27,8 @@ const Column = React.memo(function Column({ title, tasks, status, onTaskMove, on
           <TaskCard
             key={task.id}
             task={task}
-            onMove={onTaskMove}
-            onEdit={onTaskEdit}
+            onMove={handleMove}
+            onEdit={handleEdit}
           />
         ))}
         {tasks.length === 0 && (
