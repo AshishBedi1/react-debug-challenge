@@ -1,5 +1,7 @@
 import { defineConfig } from '@playwright/test'
 
+const BASE_URL = process.env.BASE_URL || 'http://localhost:5173'
+
 export default defineConfig({
   testDir: './e2e',
   timeout: 30000,
@@ -10,7 +12,7 @@ export default defineConfig({
   retries: 0,
   reporter: 'list',
   use: {
-    baseURL: 'http://localhost:4173',
+    baseURL: BASE_URL,
     headless: true,
     navigationTimeout: 30000,
   },
@@ -20,10 +22,4 @@ export default defineConfig({
       use: { browserName: 'chromium' },
     },
   ],
-  webServer: {
-    command: 'npx vite --port 4173',
-    url: 'http://localhost:4173',
-    reuseExistingServer: false,
-    timeout: 30000,
-  },
 })
