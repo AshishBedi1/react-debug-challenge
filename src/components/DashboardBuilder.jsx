@@ -105,7 +105,7 @@ function DashboardBuilder() {
   }
 
   const handleDragOver = (e, targetIndex) => {
-   
+    
     if (!nativeDragActiveRef.current) return
     reorderSections(dragSourceIndexRef.current, targetIndex)
   }
