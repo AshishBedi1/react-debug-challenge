@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { useTheme } from '../context/ThemeContext'
 import { useDataFetch } from '../hooks/useDataFetch'
 import StatCard from './dashboard/StatCard'
@@ -46,6 +46,9 @@ function DashboardBuilder() {
   const [sections, setSections] = useState(initialSections)
 
   const [dragIndex, setDragIndex] = useState(null)
+  const dragSourceIndexRef = useRef(null)
+  const pointerDragSourceIndexRef = useRef(null)
+  const nativeDragActiveRef = useRef(false)
 
   const { data: usersData, loading: usersLoading, error: usersError } = useDataFetch(
     'https://jsonplaceholder.typicode.com/users'
@@ -94,26 +97,75 @@ function DashboardBuilder() {
   }, [liveUpdates, apiFeedItems])
 
   const handleDragStart = (e, index) => {
+    nativeDragActiveRef.current = true
     setDragIndex(index)
+    dragSourceIndexRef.current = index
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.setData('text/plain', index.toString())
   }
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e, targetIndex) => {
+   
+    if (!nativeDragActiveRef.current) return
+    reorderSections(dragSourceIndexRef.current, targetIndex)
+  }
+
+  const reorderSections = (sourceIndex, targetIndex) => {
+    if (sourceIndex === null || targetIndex === null || sourceIndex === targetIndex) return
+
+    setSections((prevSections) => {
+      if (
+        sourceIndex < 0 ||
+        sourceIndex >= prevSections.length ||
+        targetIndex < 0 ||
+        targetIndex >= prevSections.length
+      ) {
+        return prevSections
+      }
+
+      const reordered = prevSections
+      const [draggedItem] = reordered.splice(sourceIndex, 1)
+      reordered.splice(targetIndex, 0, draggedItem)
+      return reordered
+    })
+    dragSourceIndexRef.current = targetIndex
+    setDragIndex(targetIndex)
+  }
+
+  const handleDragEnter = (e, targetIndex) => {
+    e.preventDefault()
+    reorderSections(dragSourceIndexRef.current, targetIndex)
   }
 
   const handleDrop = (e, dropIndex) => {
     e.preventDefault()
-    if (dragIndex === null || dragIndex === dropIndex) return
+    const draggedIndexFromData = Number.parseInt(e.dataTransfer.getData('text/plain'), 10)
+    const sourceIndex = Number.isInteger(draggedIndexFromData)
+      ? draggedIndexFromData
+      : dragSourceIndexRef.current
 
-    const reordered = sections
-    const [draggedItem] = reordered.splice(dragIndex, 1)
-    reordered.splice(dropIndex, 0, draggedItem)
-    setSections(reordered)
+    reorderSections(sourceIndex, dropIndex)
+    dragSourceIndexRef.current = null
+    nativeDragActiveRef.current = false
     setDragIndex(null)
   }
 
   const handleDragEnd = () => {
+    dragSourceIndexRef.current = null
+    nativeDragActiveRef.current = false
+    setDragIndex(null)
+  }
+
+  const handlePointerDown = (index) => {
+    pointerDragSourceIndexRef.current = index
+  }
+
+  const handlePointerUp = (targetIndex) => {
+    // Fallback path for environments where native drag/drop events don't fire reliably.
+    // Even if native drag was marked active, this still safely no-ops when already reordered.
+    reorderSections(pointerDragSourceIndexRef.current, targetIndex)
+    pointerDragSourceIndexRef.current = null
+    nativeDragActiveRef.current = false
     setDragIndex(null)
   }
 
@@ -249,8 +301,11 @@ function DashboardBuilder() {
                   dragIndex === index ? 'dragging' : ''
                 }`}
                 draggable
+                onMouseDown={() => handlePointerDown(index)}
+                onMouseUp={() => handlePointerUp(index)}
                 onDragStart={(e) => handleDragStart(e, index)}
                 onDragOver={(e) => handleDragOver(e, index)}
+                onDragEnter={(e) => handleDragEnter(e, index)}
                 onDrop={(e) => handleDrop(e, index)}
                 onDragEnd={handleDragEnd}
               >
