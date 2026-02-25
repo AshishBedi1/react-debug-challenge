@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { useTheme } from './context/ThemeContext'
 import { PreferencesProvider } from './context/PreferencesContext'
 import { SettingsProvider } from './context/SettingsContext'
@@ -28,6 +28,7 @@ function App() {
         <main className="main-content">
           <PreferencesProvider>
             <Routes>
+              <Route path="/preview/*" element={<Navigate to="/" replace />} />
               <Route path="/" element={<HomePage />} />
               <Route path="/todos" element={<TodoManager />} />
               <Route path="/products" element={<Products />} />
