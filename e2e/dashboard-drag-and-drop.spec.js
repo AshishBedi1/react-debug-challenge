@@ -13,20 +13,14 @@ const mockPosts = Array.from({ length: 10 }, (_, i) => ({
   userId: 1,
 }))
 
-const dragOptions = {
-  sourcePosition: { x: 8, y: 8 },
-  targetPosition: { x: 8, y: 8 },
-}
-
-async function dragSectionWithFallback(sectionTitles, source, target) {
-  await source.dragTo(target, dragOptions)
-
-  const orderAfterNativeDrag = await sectionTitles.allTextContents()
-  if (orderAfterNativeDrag[0] === 'Key Metrics') {
-    // Some headless runs don't emit full native drag events; use app's pointer fallback.
-    await source.dispatchEvent('mousedown', { button: 0 })
-    await target.dispatchEvent('mouseup', { button: 0 })
-  }
+// Headless Chromium doesn't fire HTML5 drag events reliably, and hit-testing for
+// mouseup can miss the target. Trigger the app's pointer fallback by dispatching
+// mousedown on source and mouseup on target so handlePointerDown/handlePointerUp run.
+async function dragSectionWithPointerFallback(source, target) {
+  await source.scrollIntoViewIfNeeded()
+  await target.scrollIntoViewIfNeeded()
+  await source.dispatchEvent('mousedown', { button: 0, bubbles: true })
+  await target.dispatchEvent('mouseup', { button: 0, bubbles: true })
 }
 
 test.describe('Dashboard section drag-and-drop reordering', () => {
@@ -45,6 +39,7 @@ test.describe('Dashboard section drag-and-drop reordering', () => {
   test('should reorder sections when dragging a section to a new position', async ({ page }) => {
     const sectionTitles = page.locator('.draggable-section .section-title')
     await expect(sectionTitles).toHaveCount(4)
+    await expect(sectionTitles.first()).toHaveText('Key Metrics', { timeout: 5000 })
 
     const initialOrder = await sectionTitles.allTextContents()
     expect(initialOrder).toEqual([
@@ -57,7 +52,7 @@ test.describe('Dashboard section drag-and-drop reordering', () => {
     const source = page.locator('.draggable-section').nth(0)
     const target = page.locator('.draggable-section').nth(2)
 
-    await dragSectionWithFallback(sectionTitles, source, target)
+    await dragSectionWithPointerFallback(source, target)
 
     await expect
       .poll(async () => (await sectionTitles.allTextContents()).indexOf('Key Metrics'), {
@@ -74,11 +69,12 @@ test.describe('Dashboard section drag-and-drop reordering', () => {
   test('should move "Key Metrics" after "Recent Activity" when dragged there', async ({ page }) => {
     const sectionTitles = page.locator('.draggable-section .section-title')
     await expect(sectionTitles).toHaveCount(4)
+    await expect(sectionTitles.first()).toHaveText('Key Metrics', { timeout: 5000 })
 
     const source = page.locator('.draggable-section').nth(0)
     const target = page.locator('.draggable-section').nth(2)
 
-    await dragSectionWithFallback(sectionTitles, source, target)
+    await dragSectionWithPointerFallback(source, target)
 
     await expect
       .poll(async () => (await sectionTitles.allTextContents())[2], {
