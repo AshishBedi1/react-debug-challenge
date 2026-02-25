@@ -13,10 +13,13 @@ const mockPosts = Array.from({ length: 10 }, (_, i) => ({
   userId: 1,
 }))
 
-// Headless Chromium doesn't fire HTML5 drag events reliably, and hit-testing for
-// mouseup can miss the target. Trigger the app's pointer fallback by dispatching
-// mousedown on source and mouseup on target so handlePointerDown/handlePointerUp run.
-async function dragSectionWithPointerFallback(source, target) {
+/**
+ * Trigger reorder by firing the app's pointer fallback (handlePointerDown on source,
+ * handlePointerUp on target). In headless Chromium the real mouse sequence often
+ * does not trigger drag/drop or hit the right element; dispatching on the exact
+ * section elements makes the reorder reliable.
+ */
+async function dragSectionToTarget(page, source, target) {
   await source.scrollIntoViewIfNeeded()
   await target.scrollIntoViewIfNeeded()
   await source.dispatchEvent('mousedown', { button: 0, bubbles: true })
@@ -50,9 +53,9 @@ test.describe('Dashboard section drag-and-drop reordering', () => {
     ])
 
     const source = page.locator('.draggable-section').nth(0)
-    const target = page.locator('.draggable-section').nth(2)
+    const target = page.locator('.draggable-section').filter({ hasText: 'Recent Activity' })
 
-    await dragSectionWithPointerFallback(source, target)
+    await dragSectionToTarget(page, source, target)
 
     await expect
       .poll(async () => (await sectionTitles.allTextContents()).indexOf('Key Metrics'), {
@@ -72,9 +75,9 @@ test.describe('Dashboard section drag-and-drop reordering', () => {
     await expect(sectionTitles.first()).toHaveText('Key Metrics', { timeout: 5000 })
 
     const source = page.locator('.draggable-section').nth(0)
-    const target = page.locator('.draggable-section').nth(2)
+    const target = page.locator('.draggable-section').filter({ hasText: 'Recent Activity' })
 
-    await dragSectionWithPointerFallback(source, target)
+    await dragSectionToTarget(page, source, target)
 
     await expect
       .poll(async () => (await sectionTitles.allTextContents())[2], {
