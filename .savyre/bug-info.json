@@ -1,0 +1,9 @@
+{
+  "description": "The Add to Cart button does nothing when clicked. Clicking 'Add to Cart' on the Products page or Home page does not add the item to the cart; the cart count stays the same and no toast appears.",
+  "expectedOutcome": "Clicking Add to Cart on a product should add that item to the cart, update the cart count, persist the cart (e.g. in Redux and localStorage), and show a success toast.",
+  "hint": "Look at useCart.js. The hook is used by Products and HomePage to get addToCart. Verify that the hook returns a function that dispatches the add-to-cart action.",
+  "bugFilePath": "src/hooks/useCart.js",
+  "difficulty": "Easy",
+  "solution": "In src/hooks/useCart.js the useCart hook does not expose addToCart in its return object. Products.jsx and HomePage.jsx destructure addToCart from useCart() and call it when the user clicks Add to Cart; when addToCart is undefined, calling addToCart(payload) throws a TypeError and the flow breaks.\n\nFix: Add addToCart back to the object returned by useCart, dispatching the addToCartAction with the payload.",
+  "solutionCode": "return {\n  cartItems: items,\n  cartCount: count,\n  cartTotal: total,\n  addToCart: (payload) => dispatch(addToCartAction(payload)),\n  updateQuantity: (payload) => dispatch(updateQuantity(payload)),\n  removeFromCart: (id) => dispatch(removeFromCart(id)),\n  clearCart: () => dispatch(clearCart()),\n};"
+}

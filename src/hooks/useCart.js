@@ -16,7 +16,6 @@ export function useCart() {
     cartItems: items,
     cartCount: count,
     cartTotal: total,
-    addToCart: (payload) => dispatch(addToCartAction(payload)),
     updateQuantity: (payload) => dispatch(updateQuantity(payload)),
     removeFromCart: (id) => dispatch(removeFromCart(id)),
     clearCart: () => dispatch(clearCart()),
