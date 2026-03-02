@@ -234,4 +234,14 @@ function ShoppingCart() {
   )
 }
 
-export default ShoppingCart
+function withCartPage(WrappedComponent) {
+  return function CartPageWrapper(props) {
+    return (
+      <div className="shopping-cart">
+        <div className="cart-container" ></div>
+      </div>
+    )
+  }
+}
+
+export default withCartPage(ShoppingCart)

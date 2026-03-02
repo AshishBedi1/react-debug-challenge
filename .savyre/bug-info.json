@@ -1,0 +1,31 @@
+{
+  "description": "On the Cart page, the cart content never appears. The page loads but only an empty area is shown. Users do not see the cart title, empty-cart message, shop-now link, or any cart items, coupon field, or checkout button.",
+  "expectedOutcome": "The Cart page shows the cart title and either the empty-cart state (with message and link to products) or the list of cart items with quantity controls, summary, coupon input, and checkout button.",
+  "hint": "Check how the cart screen is wrapped. Higher-order components must render the component they wrap.",
+  "difficulty": "Easy",
+  "bugFilePath": "src/components/ShoppingCart.jsx",
+  "solution": "The HOC withCartPage returns a wrapper that renders only an empty div structure and never renders the WrappedComponent. So the actual ShoppingCart content is never mounted. Fix: inside CartPageWrapper, render the wrapped component (e.g. return <WrappedComponent {...props} />) instead of only the empty divs.",
+  "solutionCode": "function withCartPage(WrappedComponent) {\n  return function CartPageWrapper(props) {\n    return <WrappedComponent {...props} />\n  }\n}",
+  "playwrightTests": [
+    {
+      "name": "Cart page shows the cart content",
+      "description": "Navigating to /cart should display the cart header and either empty state or cart items and summary",
+      "failsWhenBugPresent": true
+    },
+    {
+      "name": "Cart page shows empty state or cart UI",
+      "description": "User sees either the empty-cart message and shop link or the cart items list and checkout area",
+      "failsWhenBugPresent": true
+    },
+    {
+      "name": "Cart page loads without error",
+      "description": "Navigating to /cart does not show a crash or error state",
+      "failsWhenBugPresent": false
+    }
+  ],
+  "playwrightTestSnippets": [
+    "await page.goto('/cart'); await expect(page.locator('.cart-content')).toBeVisible();",
+    "await page.goto('/cart'); await expect(page.locator('.cart-header, .empty-cart').first()).toBeVisible();",
+    "await page.goto('/cart'); await expect(page.locator('.shopping-cart')).toBeVisible();"
+  ]
+}
