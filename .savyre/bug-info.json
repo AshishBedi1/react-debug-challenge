@@ -1,0 +1,38 @@
+{
+  "description": "On the Task Board page, the three columns (To Do, In Progress, Done) do not show their titles or any task cards. The board may show an error state or empty/broken column headers and no tasks are visible or interactive.",
+  "expectedOutcome": "The Task Board displays three columns with headers 'To Do', 'In Progress', and 'Done', each showing the correct count and list of task cards. Users can see tasks, move them between columns, and edit task titles.",
+  "hint": "When a component is wrapped by a higher-order component, the wrapper must pass through everything the inner component needs to render and behave correctly.",
+  "difficulty": "Easy",
+  "bugFilePath": "src/components/taskboard/Column.jsx",
+  "solution": "The Column component is wrapped by withColumnLayout HOC, but the HOC's wrapper renders <WrappedComponent /> without passing any props. So title, tasks, status, onTaskMove, and onTaskEdit never reach Column, causing undefined title/tasks and a runtime error when tasks.map is called. The fix is to forward props from the HOC to the wrapped component: <WrappedComponent {...props} />.",
+  "solutionCode": "function withColumnLayout(WrappedComponent) {\n  return function ColumnWithLayout(props) {\n    return (\n      <div className=\"board-column-wrapper\">\n        <WrappedComponent {...props} />\n      </div>\n    )\n  }\n}",
+  "playwright": [
+    {
+      "name": "Task Board columns show headers and task counts",
+      "steps": [
+        "Navigate to /task-board",
+        "Expect column header 'To Do' to be visible",
+        "Expect column header 'In Progress' to be visible",
+        "Expect column header 'Done' to be visible",
+        "Expect at least one column to show a non-zero task count in .column-count"
+      ]
+    },
+    {
+      "name": "Task Board shows task cards in columns",
+      "steps": [
+        "Navigate to /task-board",
+        "Expect .board-column to contain elements with class matching task card or column-body with child elements",
+        "Expect tasks to be visible (e.g. .column-body has task cards or 'No tasks' for empty column)"
+      ]
+    },
+    {
+      "name": "Task move button advances task to next column",
+      "steps": [
+        "Navigate to /task-board",
+        "Find first task card in To Do column and get its title",
+        "Click the move/advance button on that task",
+        "Expect the task to appear in In Progress column (or Done if it was in In Progress)"
+      ]
+    }
+  ]
+}
