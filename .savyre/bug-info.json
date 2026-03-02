@@ -1,0 +1,63 @@
+{
+  "description": "On the Contact page, after filling in the required fields (name, email, message) and clicking Send Message, the form does not submit: validation errors appear as if the fields were empty, and no success message is shown.",
+  "expectedOutcome": "After entering a valid name, email, and message and clicking Send Message, the form should submit successfully, show a success toast, and clear the form fields.",
+  "hint": "Handlers that use values from context or current state need to see the latest values when they run. Check how the validation function is defined and what it closes over.",
+  "difficulty": "Easy",
+  "bugFilePath": "src/components/Contact.jsx",
+  "solution": "The validate function was wrapped in useCallback with an empty dependency array ([]). That callback captures the initial form state and the initial t (from useTranslation context) from the first render. When the user fills the form and submits, handleSubmit calls this same validate instance, which still references the initial empty form, so validation always fails and the form never submits. Fix: remove useCallback from validate so it is recreated each render and always sees current form and t (and remove useCallback from the React import if unused); or keep useCallback but add the correct dependencies: [form, t].",
+  "solutionCode": "const validate = () => {\n    const next = {}\n    if (!form.name.trim()) next.name = t('contact_nameRequired')\n    if (!form.email.trim()) next.email = t('contact_emailRequired')\n    else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(form.email)) {\n      next.email = t('contact_emailInvalid')\n    }\n    if (!form.message.trim()) next.message = t('contact_messageRequired')\n    setErrors(next)\n    return Object.keys(next).length === 0\n  }",
+  "playwrightTestFile": "tests/contact.spec.js",
+  "playwrightTestSnippets": [
+    "test('contact form submission shows success when required fields are filled', async ({ page }) => {\n  await page.goto('/contact');\n  await page.getByLabel(/name/i).fill('Jane Doe');\n  await page.getByLabel(/email/i).fill('jane@example.com');\n  await page.getByLabel(/message/i).fill('Hello, this is a test message.');\n  await page.getByRole('button', { name: /send message/i }).click();\n  await expect(page.getByText(/message sent|sent!|success/i)).toBeVisible();\n  await expect(page.getByLabel(/name/i)).toHaveValue('');\n  await expect(page.getByLabel(/message/i)).toHaveValue('');\n});",
+    "test('contact form shows validation errors when required fields are empty', async ({ page }) => {\n  await page.goto('/contact');\n  await page.getByRole('button', { name: /send message/i }).click();\n  await expect(page.getByText(/required/i).first()).toBeVisible();\n});",
+    "test('contact form does not show success when only partial required fields filled', async ({ page }) => {\n  await page.goto('/contact');\n  await page.getByLabel(/name/i).fill('Jane');\n  await page.getByRole('button', { name: /send message/i }).click();\n  await expect(page.getByText(/message sent|sent!|success/i)).not.toBeVisible();\n});"
+  ],
+  "playwrightTests": [
+    {
+      "name": "Contact form submission shows success when required fields are filled",
+      "description": "Filling name, email, and message then submitting should result in a success toast and form reset. Fails when bug is present because validation always sees stale (empty) form.",
+      "steps": [
+        "Navigate to /contact",
+        "Fill in the name field with a non-empty value",
+        "Fill in the email field with a valid email (e.g. user@example.com)",
+        "Fill in the message field with a non-empty value",
+        "Click the Send Message button",
+        "Assert that a success toast/message is visible",
+        "Assert that the form fields are cleared"
+      ],
+      "assertions": [
+        "Expect success toast or success message to be visible after submit",
+        "Expect form inputs (name, email, message) to be empty after successful submit"
+      ]
+    },
+    {
+      "name": "Contact form shows validation errors when required fields are empty",
+      "description": "Submitting with empty required fields should show validation errors. Should pass regardless of bug.",
+      "steps": [
+        "Navigate to /contact",
+        "Leave name, email, and message empty",
+        "Click the Send Message button",
+        "Assert that validation error messages are displayed for required fields"
+      ],
+      "assertions": [
+        "Expect validation error for name to be visible",
+        "Expect validation error for email to be visible",
+        "Expect validation error for message to be visible"
+      ]
+    },
+    {
+      "name": "Contact form does not submit with only partial required fields",
+      "description": "Filling only some required fields and submitting should show errors and not show success. With bug, even full form fails; this test ensures empty/partial still shows errors.",
+      "steps": [
+        "Navigate to /contact",
+        "Fill only the name field",
+        "Click the Send Message button",
+        "Assert that validation errors appear and no success toast is shown"
+      ],
+      "assertions": [
+        "Expect at least one validation error to be visible",
+        "Expect success toast not to be visible"
+      ]
+    }
+  ]
+}

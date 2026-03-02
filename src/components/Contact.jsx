@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import { toast } from 'react-toastify'
 import { useLocale } from '../context/LocaleContext'
 import { usePreferences } from '../context/PreferencesContext'
@@ -13,7 +13,7 @@ function Contact() {
   const [errors, setErrors] = useState({})
   const [phone, setPhone] = useState('')
 
-  const validate = () => {
+  const validate = useCallback(() => {
     const next = {}
     if (!form.name.trim()) next.name = t('contact_nameRequired')
     if (!form.email.trim()) next.email = t('contact_emailRequired')
@@ -23,7 +23,7 @@ function Contact() {
     if (!form.message.trim()) next.message = t('contact_messageRequired')
     setErrors(next)
     return Object.keys(next).length === 0
-  }
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target

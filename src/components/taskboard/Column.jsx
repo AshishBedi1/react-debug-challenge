@@ -31,4 +31,14 @@ const Column = React.memo(function Column({ title, tasks, status, onTaskMove, on
   )
 })
 
-export default Column
+function withColumnLayout(WrappedComponent) {
+  return function ColumnWithLayout(props) {
+    return (
+      <div className="board-column-wrapper">
+        <WrappedComponent {...props} />
+      </div>
+    )
+  }
+}
+
+export default withColumnLayout(Column)
