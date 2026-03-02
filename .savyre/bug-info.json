@@ -1,0 +1,19 @@
+{
+  "description": "On the Contact page, when the user leaves required fields (Name, Email, Message) empty and clicks Send Message, nothing visible happens: no error messages appear and the form does not submit, so the user gets no feedback about what to fix.",
+  "expectedOutcome": "When required fields are missing or invalid, validation error messages appear next to the relevant fields and the form does not submit until the user corrects them. When all required fields are valid, submitting shows a success message.",
+  "hint": "Check where validation results are applied to the form's error state so the UI can show them.",
+  "difficulty": "Easy",
+  "bugFilePath": "src/components/Contact.jsx",
+  "solution": "The validate() function clears errors with setErrors({}) at the start and builds a 'next' object with any validation errors, but never calls setErrors(next). So validation correctly prevents submit (return false), but the error state is never updated with the new errors and the user never sees them. Fix: call setErrors(next) after building the next object so the validation errors are applied to state and rendered.",
+  "solutionCode": "  const validate = () => {\n    const next = {}\n    if (!form.name.trim()) next.name = t('contact_nameRequired')\n    if (!form.email.trim()) next.email = t('contact_emailRequired')\n    else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(form.email)) {\n      next.email = t('contact_emailInvalid')\n    }\n    if (!form.message.trim()) next.message = t('contact_messageRequired')\n    setErrors(next)\n    return Object.keys(next).length === 0\n  }",
+  "playwrightTests": [
+    "Submitting the contact form with required fields empty shows validation error messages",
+    "Submitting with valid required fields shows success and no validation errors",
+    "Submitting with invalid email shows email validation error message"
+  ],
+  "playwrightTestSnippets": [
+    "await page.goto('/contact'); await page.getByRole('button', { name: /send message/i }).click(); await expect(page.getByRole('alert').filter({ hasText: /required|invalid/i })).toHaveCount(3);",
+    "await page.goto('/contact'); await page.getByLabel(/name/i).fill('Jane'); await page.getByLabel(/email/i).fill('jane@example.com'); await page.getByLabel(/message/i).fill('Hello'); await page.getByRole('button', { name: /send message/i }).click(); await expect(page.getByText(/message sent/i)).toBeVisible();",
+    "await page.goto('/contact'); await page.getByLabel(/email/i).fill('notanemail'); await page.getByRole('button', { name: /send message/i }).click(); await expect(page.getByText(/valid email|email.*required/i)).toBeVisible();"
+  ]
+}

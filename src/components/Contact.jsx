@@ -14,6 +14,7 @@ function Contact() {
   const [phone, setPhone] = useState('')
 
   const validate = () => {
+    setErrors({})
     const next = {}
     if (!form.name.trim()) next.name = t('contact_nameRequired')
     if (!form.email.trim()) next.email = t('contact_emailRequired')
@@ -21,7 +22,6 @@ function Contact() {
       next.email = t('contact_emailInvalid')
     }
     if (!form.message.trim()) next.message = t('contact_messageRequired')
-    setErrors(next)
     return Object.keys(next).length === 0
   }
 
