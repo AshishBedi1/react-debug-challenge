@@ -20,7 +20,8 @@ test.describe('Dashboard sections', () => {
     await page.route('**/jsonplaceholder.typicode.com/posts*', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mockPosts) })
     )
-    await page.goto('/dashboard')
+    const base = (process.env.BASE_URL || '/').replace(/\/$/, '')
+    await page.goto(`${base}/dashboard`)
     await page.waitForSelector('.dashboard-sections', { timeout: 15000 })
   })
 
