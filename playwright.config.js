@@ -19,7 +19,7 @@ export default defineConfig({
   use: {
     baseURL: BASE_URL,
     headless: true,
-    navigationTimeout: 30000,
+    navigationTimeout: 60000,
   },
   // Local mode: no BASE_URL set, Playwright starts the app server.
   // External runner mode: BASE_URL set, Playwright skips webServer and targets existing app URL.

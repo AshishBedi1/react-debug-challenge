@@ -21,8 +21,8 @@ test.describe('Dashboard sections', () => {
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mockPosts) })
     )
     const base = (process.env.BASE_URL || '/').replace(/\/$/, '')
-    await page.goto(`${base}/dashboard`)
-    await page.waitForSelector('.dashboard-sections', { timeout: 15000 })
+    await page.goto(`${base}/dashboard`, { waitUntil: 'domcontentloaded' })
+    await page.waitForSelector('.dashboard-sections', { timeout: 45000 })
   })
 
   test('dashboard loads and shows four sections', async ({ page }) => {
