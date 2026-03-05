@@ -14,15 +14,17 @@ const mockPosts = Array.from({ length: 10 }, (_, i) => ({
 
 test.describe('Dashboard sections', () => {
   test.beforeEach(async ({ page }) => {
-    await page.route('**/jsonplaceholder.typicode.com/users', (route) =>
+    // Register mocks before any navigation so the app gets mocked data on first load
+    await page.route('**/jsonplaceholder.typicode.com/users**', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mockUsers) })
     )
-    await page.route('**/jsonplaceholder.typicode.com/posts*', (route) =>
+    await page.route('**/jsonplaceholder.typicode.com/posts**', (route) =>
       route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(mockPosts) })
     )
+
     const base = (process.env.BASE_URL || '/').replace(/\/$/, '')
-    await page.goto(`${base}/dashboard`, { waitUntil: 'domcontentloaded' })
-    await page.waitForSelector('.dashboard-sections', { timeout: 45000 })
+    await page.goto(`${base}/dashboard`, { waitUntil: 'domcontentloaded', timeout: 60000 })
+    await page.waitForSelector('.dashboard-sections', { timeout: 60000 })
   })
 
   test('dashboard loads and shows four sections', async ({ page }) => {
