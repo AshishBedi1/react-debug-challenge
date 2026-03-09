@@ -1,0 +1,15 @@
+{
+  "description": "The Contact page does not load properly — it crashes, shows a blank area, or an error instead of the contact form. The form cannot be used at all.",
+  "expectedOutcome": "The Contact page should load and display the contact form with empty fields so the user can fill and submit it.",
+  "hint": "The form state is used for form.name, form.email, form.message etc. — it must be initialized to an object with those keys, not left undefined.",
+  "symptom": "Contact page crashes or the form never appears; opening /contact breaks the page.",
+  "difficulty": "entry",
+  "competency": "React Hook Usage",
+  "bugFilePath": "src/components/Contact.jsx",
+  "solution": "Initialize the form state with an object that has all fields the code expects: useState({ name: '', email: '', subject: '', message: '' }). Do not leave useState() with no argument.",
+  "solutionCode": "const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })",
+  "playwrightTests": ["tests/contact.spec.js"],
+  "playwrightTestSnippets": [
+    "import { test, expect } from '@playwright/test'\\ntest('contact form loads and is visible', async ({ page }) => {\\n  await page.goto('/contact');\\n  await expect(page.getByTestId('contact-form')).toBeVisible();\\n});"
+  ]
+}

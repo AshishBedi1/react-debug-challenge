@@ -9,7 +9,7 @@ function Contact() {
   const { locale } = useLocale()
   const { currency } = usePreferences()
   const { t } = useTranslation()
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
+  const [form, setForm] = useState()
   const [errors, setErrors] = useState({})
   const [phone, setPhone] = useState('')
 
@@ -51,11 +51,12 @@ function Contact() {
           <p>{t('contact_subtitle')} (Locale: {locale}) · Display: {currency}</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="contact-form" noValidate>
+        <form onSubmit={handleSubmit} className="contact-form" noValidate data-testid="contact-form">
           <div className="form-group">
             <label htmlFor="contact-name">{t('contact_name')} *</label>
             <input
               id="contact-name"
+              data-testid="contact-name"
               type="text"
               name="name"
               value={form.name}
@@ -76,6 +77,7 @@ function Contact() {
             <label htmlFor="contact-email">{t('contact_email')} *</label>
             <input
               id="contact-email"
+              data-testid="contact-email"
               type="email"
               name="email"
               value={form.email}
@@ -113,6 +115,7 @@ function Contact() {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               placeholder={t('contact_phonePlaceholder')}
+              data-testid="contact-phone"
             />
           </div>
 
@@ -120,6 +123,7 @@ function Contact() {
             <label htmlFor="contact-message">{t('contact_message')} *</label>
             <textarea
               id="contact-message"
+              data-testid="contact-message"
               name="message"
               value={form.message}
               onChange={handleChange}
@@ -130,14 +134,14 @@ function Contact() {
               aria-describedby={errors.message ? 'message-error' : undefined}
             />
             {errors.message && (
-              <span id="message-error" className="form-error" role="alert">
+              <span id="message-error" className="form-error" role="alert" data-testid="contact-message-error">
                 {errors.message}
               </span>
             )}
           </div>
 
           <div className="form-actions">
-            <button type="submit" className="btn-submit">
+            <button type="submit" className="btn-submit" data-testid="contact-submit">
               {t('contact_send')}
             </button>
             <button
