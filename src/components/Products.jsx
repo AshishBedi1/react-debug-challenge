@@ -367,7 +367,7 @@ function Products() {
   }
 
   return (
-    <div className="products-page">
+    <div className="products-page" data-testid="products-page">
       <div className="products-container">
         <div className="products-header">
           <h1>🛍️ {t('products_title')}</h1>

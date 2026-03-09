@@ -1,0 +1,17 @@
+{
+  "competency": "React Context API Usage",
+  "difficulty": "entry",
+  "bugFilePath": "src/App.jsx",
+  "description": "When the user opens the Shop (Products) page from the navigation, the page stays blank or shows an error instead of displaying the product list and shop content.",
+  "expectedOutcome": "The Products page should render normally with the product grid, title, and the line showing theme, currency, and locale (e.g. 'Theme: ... · USD · en').",
+  "hint": "Check where the Products page is rendered in the component tree relative to PreferencesProvider.",
+  "symptom": "The Products (Shop) page is blank or crashes when you open it.",
+  "solution": "Render the Products route inside PreferencesProvider so that the Products component (which consumes PreferencesContext via usePreferences) is a descendant of the provider. Move the /products route from the first Routes block into the Routes block that is wrapped by PreferencesProvider.",
+  "solutionCode": "In App.jsx: remove the standalone Routes that only contains the /products route, and add <Route path=\"/products\" element={<Products />} /> back inside the Routes that are wrapped by <PreferencesProvider>.",
+  "buggyCode": "<main className=\"main-content\">\n  <Routes>\n    <Route path=\"/products\" element={<Products />} />\n  </Routes>\n  <PreferencesProvider>\n    <Routes>\n      ... other routes without /products\n    </Routes>\n  </PreferencesProvider>\n</main>",
+  "correctFix": "<main className=\"main-content\">\n  <PreferencesProvider>\n    <Routes>\n      <Route path=\"/products\" element={<Products />} />\n      ... all other routes\n    </Routes>\n  </PreferencesProvider>\n</main>",
+  "playwrightTests": ["tests/products-context.spec.js"],
+  "playwrightTestSnippets": [
+    "test('Products page renders with context (currency and locale)', async ({ page }) => { ... await expect(page.getByTestId('products-page')).toBeVisible(); ... await expect(page.getByText(/Theme:.*USD|currency|locale/i)).toBeVisible(); })"
+  ]
+}

@@ -26,12 +26,14 @@ function App() {
       <div className={`app ${theme}`}>
         <Navigation />
         <main className="main-content">
+          <Routes>
+            <Route path="/products" element={<Products />} />
+          </Routes>
           <PreferencesProvider>
             <Routes>
               <Route path="/preview/*" element={<Navigate to="/" replace />} />
               <Route path="/" element={<HomePage />} />
               <Route path="/todos" element={<TodoManager />} />
-              <Route path="/products" element={<Products />} />
               <Route path="/cart" element={<ShoppingCart />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/dashboard" element={<DashboardBuilder />} />
