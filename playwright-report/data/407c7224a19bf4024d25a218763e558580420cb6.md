@@ -1,0 +1,104 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "Savyre" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - heading "Savyre" [level=2] [ref=e7]
+        - generic [ref=e8]:
+          - link "Cart" [ref=e9] [cursor=pointer]:
+            - /url: /cart
+            - img [ref=e11]
+            - generic [ref=e13]: Cart
+          - button "Light" [ref=e14] [cursor=pointer]:
+            - img [ref=e15]
+      - generic [ref=e18]:
+        - link "Home" [ref=e19] [cursor=pointer]:
+          - /url: /
+          - img [ref=e20]
+          - generic [ref=e22]: Home
+        - link "Dashboard" [ref=e23] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e24]
+          - generic [ref=e26]: Dashboard
+        - link "Shop" [ref=e27] [cursor=pointer]:
+          - /url: /products
+          - img [ref=e28]
+          - generic [ref=e30]: Shop
+        - link "Users" [ref=e31] [cursor=pointer]:
+          - /url: /users
+          - img [ref=e32]
+          - generic [ref=e34]: Users
+        - link "Tasks" [ref=e35] [cursor=pointer]:
+          - /url: /todos
+          - img [ref=e36]
+          - generic [ref=e38]: Tasks
+        - link "Task Board" [ref=e39] [cursor=pointer]:
+          - /url: /task-board
+          - img [ref=e40]
+          - generic [ref=e42]: Task Board
+        - link "Blog" [ref=e43] [cursor=pointer]:
+          - /url: /blog
+          - img [ref=e44]
+          - generic [ref=e46]: Blog
+        - link "News" [ref=e47] [cursor=pointer]:
+          - /url: /news
+          - img [ref=e48]
+          - generic [ref=e50]: News
+        - link "Explorer" [ref=e51] [cursor=pointer]:
+          - /url: /data-explorer
+          - img [ref=e52]
+          - generic [ref=e54]: Explorer
+        - link "Compare" [ref=e55] [cursor=pointer]:
+          - /url: /compare
+          - img [ref=e56]
+          - generic [ref=e58]: Compare
+        - link "Register" [ref=e59] [cursor=pointer]:
+          - /url: /register
+          - img [ref=e60]
+          - generic [ref=e62]: Register
+        - link "Settings" [ref=e63] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e64]
+          - generic [ref=e66]: Settings
+        - link "Contact" [ref=e67] [cursor=pointer]:
+          - /url: /contact
+          - img [ref=e68]
+          - generic [ref=e70]: Contact
+    - main [ref=e71]:
+      - generic [ref=e73]:
+        - generic [ref=e74]:
+          - heading "📬 Contact Us" [level=1] [ref=e75]
+          - paragraph [ref=e76]: "Have a question? Send us a message and we'll respond as soon as we can. (Locale: en) · Display: USD"
+        - generic [ref=e77]:
+          - generic [ref=e78]:
+            - generic [ref=e79]: Name *
+            - textbox "Name *" [ref=e80]:
+              - /placeholder: Your name
+            - alert [ref=e81]: Name is required
+          - generic [ref=e82]:
+            - generic [ref=e83]: Email *
+            - textbox "Email *" [ref=e84]:
+              - /placeholder: your@email.com
+            - alert [ref=e85]: Email is required
+          - generic [ref=e86]:
+            - generic [ref=e87]: Subject
+            - textbox "Subject" [ref=e88]:
+              - /placeholder: What is this about?
+          - generic [ref=e89]:
+            - generic [ref=e90]: Phone (optional)
+            - textbox "Phone (optional)" [ref=e91]:
+              - /placeholder: Your phone number
+          - generic [ref=e92]:
+            - generic [ref=e93]: Message *
+            - textbox "Message *" [ref=e94]:
+              - /placeholder: Your message...
+            - alert [ref=e95]: Message is required
+          - generic [ref=e96]:
+            - button "Send Message" [active] [ref=e97] [cursor=pointer]
+            - button "Reset" [ref=e98] [cursor=pointer]
+  - region "Notifications Alt+T"
+```

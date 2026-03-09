@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { toast } from 'react-toastify'
 import { useLocale } from '../context/LocaleContext'
 import { usePreferences } from '../context/PreferencesContext'
@@ -12,6 +12,7 @@ function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [errors, setErrors] = useState({})
   const [phone, setPhone] = useState('')
+  const nameInputRef = useRef(null)
 
   const validate = () => {
     const next = {}
@@ -22,6 +23,9 @@ function Contact() {
     }
     if (!form.message.trim()) next.message = t('contact_messageRequired')
     setErrors(next)
+    if (next.name && nameInputRef.current) {
+      nameInputRef.current.focus()
+    }
     return Object.keys(next).length === 0
   }
 
@@ -51,8 +55,8 @@ function Contact() {
           <p>{t('contact_subtitle')} (Locale: {locale}) · Display: {currency}</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="contact-form" noValidate>
-          <div className="form-group">
+        <form onSubmit={handleSubmit} className="contact-form" noValidate data-testid="contact-form">
+          <div className="form-group" ref={nameInputRef}>
             <label htmlFor="contact-name">{t('contact_name')} *</label>
             <input
               id="contact-name"
@@ -64,6 +68,7 @@ function Contact() {
               className={errors.name ? 'input-error' : ''}
               aria-invalid={!!errors.name}
               aria-describedby={errors.name ? 'name-error' : undefined}
+              data-testid="contact-name-input"
             />
             {errors.name && (
               <span id="name-error" className="form-error" role="alert">
@@ -137,7 +142,7 @@ function Contact() {
           </div>
 
           <div className="form-actions">
-            <button type="submit" className="btn-submit">
+            <button type="submit" className="btn-submit" data-testid="contact-submit-btn">
               {t('contact_send')}
             </button>
             <button

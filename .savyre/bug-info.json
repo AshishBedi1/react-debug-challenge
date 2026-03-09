@@ -1,0 +1,17 @@
+{
+  "description": "When the user submits the contact form with the required Name field empty, the first invalid field (name input) should receive focus so they can fix it immediately. Instead, focus does not move to the name input.",
+  "expectedOutcome": "After submitting the form with name empty, the name input should be focused so the user can type without clicking.",
+  "hint": "The ref used to focus the first error is attached to a wrapper element instead of the focusable input.",
+  "symptom": "Submitting with name empty does not focus the name field; focus stays on the submit button or nowhere useful.",
+  "difficulty": "entry",
+  "competency": "React Component Refs Usage",
+  "bugFilePath": "src/components/Contact.jsx",
+  "solution": "Move the ref from the form-group div to the actual name input so that nameInputRef.current.focus() targets the input element.",
+  "solutionCode": "Remove ref={nameInputRef} from the <div className=\"form-group\"> and add ref={nameInputRef} to the <input> for the name field (the one with id=\"contact-name\" / data-testid=\"contact-name-input\").",
+  "playwrightTests": ["tests/contact.spec.js"],
+  "playwrightTestSnippets": [
+    "await page.goto('/contact');",
+    "await page.getByTestId('contact-submit-btn').click();",
+    "await expect(page.getByTestId('contact-name-input')).toBeFocused();"
+  ]
+}
