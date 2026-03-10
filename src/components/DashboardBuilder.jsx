@@ -12,6 +12,7 @@ import { useSubscription } from '../hooks/useSubscription'
 import './DashboardBuilder.css'
 
 const AuthStatCard = withWidgetAuth(StatCard)
+const AuthFeedWidget = withWidgetAuth(FeedWidget)
 
 const dashboardStats = [
   { id: 1, value: '2,847', label: 'Total Users', color: '#600EE4' },
@@ -157,7 +158,7 @@ function DashboardBuilder() {
         </div>
 
         {/* Custom Widgets */}
-        <div className="dashboard-section">
+        <div className="dashboard-section" data-testid="dashboard-custom-widgets">
           <h2 className="section-title">Custom Widgets</h2>
           <div className="custom-widgets-grid">
             <ErrorBoundary>

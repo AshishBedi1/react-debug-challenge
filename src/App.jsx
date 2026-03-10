@@ -17,6 +17,7 @@ import DataExplorer from './components/DataExplorer'
 import EventRegistration from './components/EventRegistration'
 import TaskBoard from './components/TaskBoard'
 import ProductComparison from './components/ProductComparison'
+import PrivateRoute from './components/PrivateRoute'
 import './App.css'
 
 function App() {
@@ -34,7 +35,9 @@ function App() {
               <Route path="/products" element={<Products />} />
               <Route path="/cart" element={<ShoppingCart />} />
               <Route path="/contact" element={<Contact />} />
-              <Route path="/dashboard" element={<DashboardBuilder />} />
+              <Route element={<PrivateRoute />}>
+                <Route path="/dashboard" element={<DashboardBuilder />} />
+              </Route>
               <Route path="/users" element={<UserDirectory />} />
               <Route path="/blog" element={<BlogPage />} />
               <Route path="/news" element={<NewsFeed />} />

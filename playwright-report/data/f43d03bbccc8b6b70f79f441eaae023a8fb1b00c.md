@@ -1,0 +1,177 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e3]:
+    - navigation [ref=e4]:
+      - generic [ref=e5]:
+        - link "Savyre" [ref=e6] [cursor=pointer]:
+          - /url: /
+          - heading "Savyre" [level=2] [ref=e7]
+        - generic [ref=e8]:
+          - link "Cart" [ref=e9] [cursor=pointer]:
+            - /url: /cart
+            - img [ref=e11]
+            - generic [ref=e13]: Cart
+          - button "Light" [ref=e14] [cursor=pointer]:
+            - img [ref=e15]
+      - generic [ref=e18]:
+        - link "Home" [ref=e19] [cursor=pointer]:
+          - /url: /
+          - img [ref=e20]
+          - generic [ref=e22]: Home
+        - link "Dashboard" [ref=e23] [cursor=pointer]:
+          - /url: /dashboard
+          - img [ref=e24]
+          - generic [ref=e26]: Dashboard
+        - link "Shop" [ref=e27] [cursor=pointer]:
+          - /url: /products
+          - img [ref=e28]
+          - generic [ref=e30]: Shop
+        - link "Users" [ref=e31] [cursor=pointer]:
+          - /url: /users
+          - img [ref=e32]
+          - generic [ref=e34]: Users
+        - link "Tasks" [ref=e35] [cursor=pointer]:
+          - /url: /todos
+          - img [ref=e36]
+          - generic [ref=e38]: Tasks
+        - link "Task Board" [ref=e39] [cursor=pointer]:
+          - /url: /task-board
+          - img [ref=e40]
+          - generic [ref=e42]: Task Board
+        - link "Blog" [ref=e43] [cursor=pointer]:
+          - /url: /blog
+          - img [ref=e44]
+          - generic [ref=e46]: Blog
+        - link "News" [ref=e47] [cursor=pointer]:
+          - /url: /news
+          - img [ref=e48]
+          - generic [ref=e50]: News
+        - link "Explorer" [ref=e51] [cursor=pointer]:
+          - /url: /data-explorer
+          - img [ref=e52]
+          - generic [ref=e54]: Explorer
+        - link "Compare" [ref=e55] [cursor=pointer]:
+          - /url: /compare
+          - img [ref=e56]
+          - generic [ref=e58]: Compare
+        - link "Register" [ref=e59] [cursor=pointer]:
+          - /url: /register
+          - img [ref=e60]
+          - generic [ref=e62]: Register
+        - link "Settings" [ref=e63] [cursor=pointer]:
+          - /url: /settings
+          - img [ref=e64]
+          - generic [ref=e66]: Settings
+        - link "Contact" [ref=e67] [cursor=pointer]:
+          - /url: /contact
+          - img [ref=e68]
+          - generic [ref=e70]: Contact
+    - main [ref=e71]:
+      - generic [ref=e72]:
+        - generic [ref=e73]:
+          - generic [ref=e74]:
+            - heading "Dashboard" [level=1] [ref=e75]
+            - paragraph [ref=e76]: Monitor your key metrics and recent activity
+          - generic [ref=e77]:
+            - button "Grid View" [ref=e78] [cursor=pointer]
+            - button "List View" [ref=e79] [cursor=pointer]
+            - button "Settings ⚙️" [ref=e80] [cursor=pointer]:
+              - generic [ref=e81]: Settings
+              - generic [ref=e82]: ⚙️
+        - generic [ref=e83]:
+          - heading "Key Metrics" [level=2] [ref=e84]
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - generic [ref=e87]: Authorized
+              - generic [ref=e88]: 2,847
+              - generic [ref=e89]: Total Users
+              - generic [ref=e90]: grid
+            - generic [ref=e91]:
+              - generic [ref=e92]: Authorized
+              - generic [ref=e93]: $34,500
+              - generic [ref=e94]: Revenue
+              - generic [ref=e95]: grid
+            - generic [ref=e96]:
+              - generic [ref=e97]: Authorized
+              - generic [ref=e98]: 1,234
+              - generic [ref=e99]: Orders
+              - generic [ref=e100]: grid
+            - generic [ref=e101]:
+              - generic [ref=e102]: Authorized
+              - generic [ref=e103]: 98.5%
+              - generic [ref=e104]: Satisfaction
+              - generic [ref=e105]: grid
+        - generic [ref=e106]:
+          - heading "Analytics" [level=2] [ref=e107]
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - heading "Weekly Sales" [level=3] [ref=e111]
+              - generic [ref=e112]:
+                - generic [ref=e113]:
+                  - generic [ref=e115]: Mon
+                  - generic [ref=e116]: "120"
+                - generic [ref=e117]:
+                  - generic [ref=e119]: Tue
+                  - generic [ref=e120]: "200"
+                - generic [ref=e121]:
+                  - generic [ref=e123]: Wed
+                  - generic [ref=e124]: "150"
+                - generic [ref=e125]:
+                  - generic [ref=e127]: Thu
+                  - generic [ref=e128]: "280"
+                - generic [ref=e129]:
+                  - generic [ref=e131]: Fri
+                  - generic [ref=e132]: "220"
+            - button "Show Monthly Trends" [ref=e134] [cursor=pointer]
+        - generic [ref=e135]:
+          - heading "Recent Activity" [level=2] [ref=e136]
+          - generic [ref=e137]:
+            - generic [ref=e138]:
+              - heading "Activity Feed" [level=3] [ref=e139]
+              - button "Refresh" [ref=e140] [cursor=pointer]
+            - list [ref=e141]:
+              - listitem [ref=e142]:
+                - generic [ref=e144]:
+                  - generic [ref=e145]: Message from dashboard-activity at 10:15:46 AM
+                  - generic [ref=e146]: just now
+              - listitem [ref=e147]:
+                - generic [ref=e149]:
+                  - generic [ref=e150]: New user registration spike
+                  - generic [ref=e151]: 2 hours ago
+              - listitem [ref=e152]:
+                - generic [ref=e154]:
+                  - generic [ref=e155]: Server maintenance completed
+                  - generic [ref=e156]: 5 hours ago
+              - listitem [ref=e157]:
+                - generic [ref=e159]:
+                  - generic [ref=e160]: Payment gateway updated
+                  - generic [ref=e161]: 1 day ago
+              - listitem [ref=e162]:
+                - generic [ref=e164]:
+                  - generic [ref=e165]: "New feature: Dark mode"
+                  - generic [ref=e166]: 2 days ago
+              - listitem [ref=e167]:
+                - generic [ref=e169]:
+                  - generic [ref=e170]: "Bug fix: Cart total"
+                  - generic [ref=e171]: 3 days ago
+        - generic [ref=e172]:
+          - heading "Custom Widgets" [level=2] [ref=e173]
+          - generic [ref=e174]:
+            - generic [ref=e177]:
+              - generic [ref=e178]: "500"
+              - generic [ref=e179]: Active Sessions
+            - generic [ref=e182]:
+              - heading "Alerts" [level=3] [ref=e184]
+              - list [ref=e185]:
+                - listitem [ref=e186]:
+                  - generic [ref=e188]:
+                    - generic [ref=e189]: CPU usage high
+                    - generic [ref=e190]: 10 min ago
+                - listitem [ref=e191]:
+                  - generic [ref=e193]:
+                    - generic [ref=e194]: Disk space low
+                    - generic [ref=e195]: 30 min ago
+  - region "Notifications Alt+T"
+```

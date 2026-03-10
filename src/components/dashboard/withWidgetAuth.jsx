@@ -8,7 +8,7 @@ function withWidgetAuth(WrappedComponent) {
       return <div className="widget-unauthorized">Not authorized to view this widget</div>
     }
 
-    return <WrappedComponent ref={ref} {...props} />
+    return <WrappedComponent ref={ref} {...props} isAuthorized={true} />
   })
 
   WithAuth.displayName = `WithAuth(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`

@@ -1,8 +1,11 @@
-function FeedWidget({ title, items, onRefresh, maxItems }) {
+function FeedWidget({ title, items, onRefresh, maxItems, isAuthorized }) {
   const displayItems = maxItems && items ? items.slice(0, maxItems) : items
 
   return (
     <div className="feed-widget">
+      {isAuthorized && (
+        <span className="widget-authorized-badge" data-testid="widget-authorized">Authorized</span>
+      )}
       <div className="feed-header">
         <h3>{title}</h3>
         {onRefresh && (

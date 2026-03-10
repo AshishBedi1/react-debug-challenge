@@ -1,0 +1,19 @@
+{
+  "description": "On the Dashboard page, the Custom Widgets section shows the 'Active Sessions' and 'Alerts' widgets but they do not display the 'Authorized' badge that appears on the Key Metrics widgets above. All dashboard widgets that are meant to be protected should show the same Authorized indicator.",
+  "expectedOutcome": "Every widget in the Custom Widgets section (Active Sessions and Alerts) should display the 'Authorized' badge, consistent with the Key Metrics section which uses the same pattern.",
+  "hint": "Key Metrics use a higher-order component to wrap widgets; Custom Widgets pass the base components directly. Reuse the same wrapping pattern for Custom Widgets.",
+  "symptom": "Custom Widgets do not show the 'Authorized' badge while Key Metrics do.",
+  "difficulty": "entry",
+  "competency": "React Component Reusability",
+  "bugFilePath": "src/components/DashboardBuilder.jsx",
+  "solution": "Use the existing HOC-wrapped components (AuthStatCard and AuthFeedWidget) when rendering Custom Widgets via WidgetPanel, instead of passing the raw StatCard and FeedWidget components.",
+  "solutionCode": "In the Custom Widgets section, change WidgetPanel's component prop from StatCard to AuthStatCard and from FeedWidget to AuthFeedWidget. So: component={AuthStatCard} and component={AuthFeedWidget}.",
+  "buggyCode": "WidgetPanel component={StatCard} ... WidgetPanel component={FeedWidget}",
+  "exactFix": "WidgetPanel component={AuthStatCard} ... WidgetPanel component={AuthFeedWidget}",
+  "playwrightTests": ["tests/dashboard.spec.js"],
+  "playwrightTestSnippets": [
+    "await page.goto('/dashboard');",
+    "const customWidgets = page.getByTestId('dashboard-custom-widgets');",
+    "await expect(customWidgets.getByTestId('widget-authorized')).toHaveCount(2);"
+  ]
+}
