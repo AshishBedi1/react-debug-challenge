@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { toast } from 'react-toastify'
 import { useLocale } from '../context/LocaleContext'
 import { usePreferences } from '../context/PreferencesContext'
 import { useTranslation } from '../hooks/useTranslation'
+import FormInput from './FormInput'
 import './Contact.css'
 
 function Contact() {
@@ -12,6 +13,14 @@ function Contact() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [errors, setErrors] = useState({})
   const [phone, setPhone] = useState('')
+  const nameInputRef = useRef(null)
+
+  const handleReset = () => {
+    setForm({ name: '', email: '', subject: '', message: '' })
+    setErrors({})
+    setPhone('')
+    nameInputRef.current?.focus()
+  }
 
   const validate = () => {
     const next = {}
@@ -54,7 +63,8 @@ function Contact() {
         <form onSubmit={handleSubmit} className="contact-form" noValidate>
           <div className="form-group">
             <label htmlFor="contact-name">{t('contact_name')} *</label>
-            <input
+            <FormInput
+              ref={nameInputRef}
               id="contact-name"
               type="text"
               name="name"
@@ -64,6 +74,7 @@ function Contact() {
               className={errors.name ? 'input-error' : ''}
               aria-invalid={!!errors.name}
               aria-describedby={errors.name ? 'name-error' : undefined}
+              data-testid="contact-name-input"
             />
             {errors.name && (
               <span id="name-error" className="form-error" role="alert">
@@ -143,11 +154,8 @@ function Contact() {
             <button
               type="button"
               className="btn-reset"
-              onClick={() => {
-                setForm({ name: '', email: '', subject: '', message: '' })
-                setErrors({})
-                setPhone('')
-              }}
+              onClick={handleReset}
+              data-testid="contact-reset-btn"
             >
               {t('contact_reset')}
             </button>

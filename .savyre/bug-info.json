@@ -1,0 +1,17 @@
+{
+  "description": "The contact form should focus the Name field on page load and again after clicking Reset, but the name field never receives focus in either case.",
+  "expectedOutcome": "On load and after clicking Reset, the Name input should receive focus so the user can type without clicking into the field.",
+  "hint": "Refs passed to a custom component don't reach the DOM unless the component forwards them.",
+  "symptom": "Name field is not focused on page load or after clicking Reset.",
+  "difficulty": "entry",
+  "competency": "React Component Refs Usage",
+  "bugFilePath": "src/components/FormInput.jsx",
+  "solution": "Wrap FormInput with React.forwardRef and pass the ref to the underlying native input; ensure Contact.jsx focuses on mount via useEffect and on reset in handleReset.",
+  "buggyCode": "function FormInput(props) {\n  const { className, ...rest } = props\n  return (\n    <input\n      className={className}\n      {...rest}\n    />\n  )\n}",
+  "solutionCode": "import React from 'react'\n\nconst FormInput = React.forwardRef(function FormInput(props, ref) {\n  const { className, ...rest } = props\n  return (\n    <input\n      ref={ref}\n      className={className}\n      {...rest}\n    />\n  )\n})\n\nexport default FormInput",
+  "playwrightTests": ["tests/contact.spec.js"],
+  "playwrightTestSnippets": [
+    "test('focuses the name input when the contact page loads', async ({ page }) => {\n  await page.goto('/contact')\n  const nameInput = page.getByTestId('contact-name-input')\n  await expect(nameInput).toBeVisible()\n  await expect(nameInput).toBeFocused()\n})",
+    "test('focuses the name input after clicking Reset', async ({ page }) => {\n  await page.goto('/contact')\n  const nameInput = page.getByTestId('contact-name-input')\n  await expect(nameInput).toBeVisible()\n  await page.getByTestId('contact-reset-btn').click()\n  await expect(nameInput).toBeFocused()\n})"
+  ]
+}
