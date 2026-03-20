@@ -30,7 +30,15 @@ function App() {
             <Routes>
               <Route path="/preview/*" element={<Navigate to="/" replace />} />
               <Route path="/" element={<HomePage />} />
-              <Route path="/todos" element={<TodoManager />} />
+              <Route path="/todos" element={
+                <TodoManager>
+                  <TodoManager.Sidebar />
+                  <TodoManager.Main>
+                    <TodoManager.List />
+                    <TodoManager.Input />
+                  </TodoManager.Main>
+                </TodoManager>
+              } />
               <Route path="/products" element={<Products />} />
               <Route path="/cart" element={<ShoppingCart />} />
               <Route path="/contact" element={<Contact />} />
