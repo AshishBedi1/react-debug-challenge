@@ -34,7 +34,7 @@ function EventRegistration() {
     mode: 'onBlur',
   })
 
-  const { handleSubmit, reset, formState: { isValid } } = methods
+  const { handleSubmit, reset, trigger, formState: { isValid } } = methods
 
   const onSubmit = async (data) => {
     setIsSubmitting(true)
@@ -63,6 +63,7 @@ function EventRegistration() {
   }
 
   const handleNext = () => {
+    // allowing the user to proceed to the next step even if the form is invalid.
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1)
     }
