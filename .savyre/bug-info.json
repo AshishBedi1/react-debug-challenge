@@ -1,0 +1,12 @@
+{
+  "description": "The theme toggle button does not change the theme between light and dark modes when clicked. Instead, nothing happens visibly on the screen.",
+  "expectedOutcome": "When the theme toggle button is clicked, the application should switch between light and dark themes, visibly changing the appearance of the interface.",
+  "hint": "Search for the bug in ThemeContext.jsx and verify the logic handles the failing case correctly.",
+  "difficulty": "Easy",
+  "competency": "React Context API Usage",
+  "bugFilePath": "src/context/ThemeContext.jsx",
+  "solution": "The root cause is a logic error in src/context/ThemeContext.jsx. The fix should correct the condition or return value so the application behaves as expected. Verify the change resolves the failing scenario.",
+  "solutionCode": "import { createContext, useContext, useState, useCallback } from 'react'\n\nconst ThemeContext = createContext(null)\n\nexport function ThemeProvider({ children }) {\n  const [theme, setTheme] = useState(() => {\n    try {\n      return localStorage.getItem('appTheme') || 'light'\n    } catch {\n      return 'light'\n    }\n  })\n\n  const toggleTheme = useCallback(() => {\n    setTheme((prevTheme) => {\n      const newTheme = prevTheme === 'light' ? 'dark' : 'light'\n      try {\n        localStorage.setItem('appTheme', newTheme)\n      } catch (e) {\n        console.error('Failed to save theme to localStorage', e)\n      }\n      return newTheme\n    })\n  }, [])\n\n  const themeLabel = useCallback(() => (theme === 'dark' ? 'Dark' : 'Light'), [theme])\n  const config = { primaryColor: theme === 'dark' ? '#1a1a1a' : '#ffffff', label: theme }\n  const value = {\n    theme,\n    toggleTheme,\n    isDark: theme === 'dark',\n    themeLabel,\n    config,\n  }\n  return (\n    <ThemeContext.Provider value={value}>\n      {children}\n    </ThemeContext.Provider>\n  )\n}\n\nexport function useTheme() {\n  const ctx = useContext(ThemeContext)\n  if (!ctx) {\n    throw new Error('useTheme must be used within ThemeProvider')\n  }\n  return ctx\n}",
+  "playwrightTests": "Playwright tests should fail before the fix and pass after the fix for the same scenario.",
+  "playwrightTestSnippets": "tests/app.spec.js - Playwright tests for fail-then-pass validation"
+}

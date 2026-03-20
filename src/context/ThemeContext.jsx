@@ -12,14 +12,14 @@ export function ThemeProvider({ children }) {
   })
 
   const toggleTheme = useCallback(() => {
-    setTheme((prev) => {
-      const next = prev === 'light' ? 'dark' : 'light'
+    setTheme((prevTheme) => {
+      const newTheme = prevTheme === 'light' ? 'dark' : 'light'
       try {
-        localStorage.setItem('appTheme', next)
+        localStorage.setItem('appTheme', newTheme)
       } catch (e) {
-        console.warn('Could not persist theme', e)
+        console.error('Failed to save theme to localStorage', e)
       }
-      return next
+      return newTheme
     })
   }, [])
 
