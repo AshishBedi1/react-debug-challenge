@@ -89,9 +89,13 @@ function TodoManager() {
   }
 
   const focusTodoInput = () => {
+    // BUG: Incorrectly using useRef. Should be todoInputRef.current.focus()
+    // By commenting this out, the input will not be focused when the button is clicked.
+    /*
     if (todoInputRef.current) {
       todoInputRef.current.focus()
     }
+    */
     setDraftsOpenedCount((c) => c + 1)
   }
 

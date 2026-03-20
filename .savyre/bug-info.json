@@ -1,0 +1,12 @@
+{
+  "description": "When the user interacts with the React Component Refs Usage flow, the expected behavior does not match what actually happens. The application shows incorrect or missing data, or fails to respond as expected to user actions.",
+  "expectedOutcome": "When the 'New Task' button is clicked, the input field should be automatically focused, allowing the user to start typing immediately.",
+  "hint": "Search for the bug in TodoManager.jsx and verify the logic handles the failing case correctly.",
+  "difficulty": "Easy",
+  "competency": "React Component Refs Usage",
+  "bugFilePath": "src/components/TodoManager.jsx",
+  "solution": "The root cause is a logic error in src/components/TodoManager.jsx. The fix should correct the condition or return value so the application behaves as expected. Verify the change resolves the failing scenario.",
+  "solutionCode": "const focusTodoInput = () => {\n    if (todoInputRef.current) {\n      todoInputRef.current.focus()\n    }\n    setDraftsOpenedCount((c) => c + 1)\n  }",
+  "playwrightTests": "Playwright tests should fail before the fix and pass after the fix for the same scenario.",
+  "playwrightTestSnippets": "tests/app.spec.js - Playwright tests for fail-then-pass validation"
+}
