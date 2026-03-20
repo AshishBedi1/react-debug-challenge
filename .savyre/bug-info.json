@@ -1,0 +1,12 @@
+{
+  "description": "When users attempt to submit the contact form, they do not receive any validation error messages even when required fields are left empty or filled incorrectly. This results in the form being submitted without proper validation feedback.",
+  "expectedOutcome": "When the bug is fixed, users should see appropriate validation error messages when they attempt to submit the contact form with missing or incorrect information. The form should only be submitted successfully when all fields are correctly filled out.",
+  "hint": "Search for the bug in package-lock.json and verify the logic handles the failing case correctly.",
+  "difficulty": "Easy",
+  "competency": "React Form Handling",
+  "bugFilePath": "package-lock.json",
+  "solution": "The root cause is a logic error in package-lock.json. The fix should correct the condition or return value so the application behaves as expected. Verify the change resolves the failing scenario.",
+  "solutionCode": "const validate = () => {\n    const next = {}\n    if (!form.name.trim()) next.name = t('contact_nameRequired')\n    if (!form.email.trim()) next.email = t('contact_emailRequired')\n    else if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(form.email)) {\n      next.email = t('contact_emailInvalid')\n    }\n    if (!form.message.trim()) next.message = t('contact_messageRequired')\n    setErrors(next)\n    return Object.keys(next).length === 0\n  }\n\n  const handleSubmit = (e) => {\n    e.preventDefault()\n    if (!validate()) return\n    // ... rest of the function\n  }",
+  "playwrightTests": "Playwright tests should fail before the fix and pass after the fix for the same scenario.",
+  "playwrightTestSnippets": "tests/app.spec.js - Playwright tests for fail-then-pass validation"
+}
