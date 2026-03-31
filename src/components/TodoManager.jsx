@@ -31,12 +31,19 @@ function TodoManager() {
   const [todoInput, setTodoInput] = useState('')
   const [editValue, setEditValue] = useState('')
   const todoInputRef = useRef(null)
+  const editInputRef = useRef(null)
   const [lastUpdated, setLastUpdated] = useState(null)
   const [draftsOpenedCount, setDraftsOpenedCount] = useState(0)
 
   useEffect(() => {
     if (todoInputRef.current && !editingId) {
       todoInputRef.current.focus()
+    }
+  }, [editingId])
+
+  useEffect(() => {
+    if (editingId && editInputRef.current) {
+      editInputRef.current.focus()
     }
   }, [editingId])
 
@@ -53,6 +60,9 @@ function TodoManager() {
     if (trimmedValue === '') return
     dispatchAddTodo(trimmedValue)
     setTodoInput('')
+    queueMicrotask(() => {
+      todoInputRef.current?.focus()
+    })
   }
 
   const handleToggleComplete = (id) => {
@@ -114,7 +124,9 @@ function TodoManager() {
             <h2>{t('todos_title')}</h2>
           </div>
           <button 
+            type="button"
             className="new-task-btn"
+            data-testid="todo-focus-new-task-btn"
             onClick={focusTodoInput}
           >
             <FaPlus size={16} />
@@ -154,9 +166,10 @@ function TodoManager() {
             <span className="progress-label">{t('todos_progress')}</span>
             <span className="progress-percentage">{completionRate}%</span>
           </div>
-          <div className="progress-bar">
+          <div className="progress-bar" data-testid="todo-progress-track">
             <div 
               className="progress-fill" 
+              data-testid="todo-progress-fill"
               style={{ width: `${completionRate}%` }}
             ></div>
           </div>
@@ -187,7 +200,7 @@ function TodoManager() {
           <div className="stat-card">
             <div className="stat-icon active">✏️</div>
             <div className="stat-info">
-              <span className="stat-value">{draftsOpenedCount}</span>
+              <span className="stat-value" data-testid="todo-drafts-count">{draftsOpenedCount}</span>
               <span className="stat-label">{t('todos_draftsOpened')}</span>
             </div>
           </div>
@@ -237,16 +250,18 @@ function TodoManager() {
               }</p>
             </div>
           ) : (
-            <div className="todo-list">
+            <div className="todo-list" data-testid="todo-list">
               {filteredTodos.map((todo, index) => (
                 <div 
                   key={todo.id} 
+                  data-testid="todo-item"
                   className={`todo-item ${todo.completed ? 'completed' : ''}`}
                   style={{ animationDelay: `${index * 0.05}s` }}
                 >
                   {editingId === todo.id ? (
                     <div className="edit-mode">
                       <input
+                        ref={editInputRef}
                         type="text"
                         value={editValue}
                         onChange={(e) => setEditValue(e.target.value)}
@@ -255,7 +270,7 @@ function TodoManager() {
                           if (e.key === 'Escape') handleCancelEdit()
                         }}
                         className="edit-input"
-                        autoFocus
+                        data-testid="todo-edit-input"
                       />
                       <div className="edit-actions">
                         <button onClick={() => handleSaveEdit(todo.id)} className="action-btn save-btn" title={t('todos_save')}>
@@ -295,8 +310,10 @@ function TodoManager() {
                       </div>
                       <div className="todo-actions">
                         <button 
+                          type="button"
                           onClick={() => handleStartEdit(todo.id, todo.text)} 
                           className="action-btn edit-btn"
+                          data-testid="todo-item-edit-btn"
                           title={t('todos_editTask')}
                         >
                           <FaPen size={16} />
@@ -330,10 +347,12 @@ function TodoManager() {
                 onChange={(e) => setTodoInput(e.target.value)}
                 placeholder={t('todos_addPlaceholder')}
                 className="todo-input"
+                data-testid="todo-input"
               />
               <button 
                 type="submit" 
                 className="send-button"
+                data-testid="todo-submit"
                 disabled={!todoInput.trim()}
                 title={t('todos_newTask')}
               >

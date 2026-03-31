@@ -1,0 +1,14 @@
+{
+  "description": "You are validating a task list screen that uses React refs for keyboard focus and for driving the composer input. Using stable selectors, write or extend Playwright tests that prove the main field receives focus when expected, that a sidebar control refocuses the composer and updates related UI state, that layout can be measured for the progress area, and that new items render in the list. Align expectations with how refs and focus should behave in the component implementation.",
+  "expectedOutcome": "All Playwright checks pass: focus stays on the composer after adding a task, the drafts counter reflects ref-driven focus actions, the progress track has non-zero dimensions, the edit field is focused when editing, and list content updates are visible. The app behaves predictably for keyboard users.",
+  "hint": "Prefer `data-testid` hooks and assert `toBeFocused()` where focus is part of the contract.",
+  "difficulty": "Mid",
+  "competency": "React Component Refs Usage",
+  "bugFilePath": "src/components/TodoManager.jsx",
+  "solution": "Keep refs on the composer and edit fields; after a successful add, schedule `focus()` on the composer ref so focus is not left on the submit control. When `editingId` is set, focus the edit input via a ref in `useEffect`. Expose test IDs on interactive and measurable regions for E2E.",
+  "solutionCode": "const todoInputRef = useRef(null)\nconst editInputRef = useRef(null)\n\nuseEffect(() => {\n  if (todoInputRef.current && !editingId) {\n    todoInputRef.current.focus()\n  }\n}, [editingId])\n\nuseEffect(() => {\n  if (editingId && editInputRef.current) {\n    editInputRef.current.focus()\n  }\n}, [editingId])\n\nconst handleAddTodo = (e) => {\n  e.preventDefault()\n  const trimmedValue = todoInput.trim()\n  if (trimmedValue === '') return\n  dispatchAddTodo(trimmedValue)\n  setTodoInput('')\n  queueMicrotask(() => {\n    todoInputRef.current?.focus()\n  })\n}",
+  "playwrightTests": "If focus is not restored to the composer after submit, or the edit field does not receive focus when editing, the Playwright expectations on focused elements fail while passing runs confirm ref-backed focus management. Assertions on the progress track bounding box fail when the element is missing or has zero size, and pass when layout is measurable. List and drafts assertions fail when the DOM does not update, and pass when items and counters match the user actions.",
+  "playwrightTestSnippets": {
+    "reactRefs": "e2e/react-refs.spec.ts"
+  }
+}
